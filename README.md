@@ -24,5 +24,5 @@ Generation of a normalization proposal: synthesis of relations in 3NF is guarant
   - DDL statements to delete the old table
   - DDL statements to add foreign key and constraints to the new tables
   - DDL statements for view generation to ease the porting of existing database apllications
-- Import and export of FDs and database schemes as XML files
-- Import of FDs, automatically retrieved from a database
+  - Import and export of FDs and database schemes as XML files
+  - Import of FDs, automatically retrieved from a database
