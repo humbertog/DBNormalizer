@@ -18,7 +18,7 @@ Generation of a normalization proposal: synthesis of relations in 3NF is guarant
   - all candidate keys for the new relations
   - foreign key dependencies between the new relations
   - normal forms of the new relations (3NF or BCNF)
-- If a database connection is established, a SQL script for database transformation is created. This script includes
+  - If a database connection is established, a SQL script for database transformation is created. This script includes
   - DDL statements to create the new tables
   - DML statements to migrate data from the old table to the new tables
   - DDL statements to delete the old table
