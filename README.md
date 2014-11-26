@@ -3,7 +3,7 @@ DBNormalizer
 
 DB normalizer project DMKM
 
-Following features: 
+Following features:
 - Import of database schemes (metadata) from a database instance; if no database connection is available, relational schemes may be prompted manually
 - Specification and editing of functional dependencies (FDs)
 - Testing if a given set of FDs is satisfied in a database table (only if a database connection is available)
