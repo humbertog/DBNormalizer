@@ -1,6 +1,6 @@
 __author__ = 'Humberto'
 
-from .fds import *
+from fds import *
 
 # Instantiate 3 FDs objects:
 fd1 = FDependency(['A'], ['C', 'D']) # means A -> CD
@@ -9,9 +9,8 @@ fd3 = FDependency(['C', 'D'], ['E'])
 
 # Instantiate an object that contains a list of FDs:
 fds = FDependencyList([fd2, fd3])
-fds.append(fd1)  # This class inherits from list
-
-print(fds)
+fds.append(fd1)  # This class inherits from list so you can use any list method!
+#print(fds)
 
 # Computes the attribute closure of AB with the FDs contained
 # in fds
