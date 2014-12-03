@@ -1,6 +1,6 @@
 __author__ = 'Humberto'
 
-from fds import *
+from DBNormalizer.model.fds import *
 
 # Instantiate 3 FDs objects:
 fd1 = FDependency(['A'], ['C', 'D']) # means A -> CD
