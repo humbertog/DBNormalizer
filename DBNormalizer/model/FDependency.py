@@ -1,6 +1,6 @@
 __author__ = 'humberto'
 
-from ..model.FDependencyList import *
+from FDependencyList import *
 
 
 class FDependency:
