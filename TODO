@@ -1,0 +1,11 @@
+TODO
+========
+
+2014/12/06:
+- Write the canonical cover method in the FDependencyList class
+    - Create Test cases to show the correctness of the program
+- Create relation object
+    - Connect to DB and instantiate a relation object
+
+2014/12/13
+- NFs??
