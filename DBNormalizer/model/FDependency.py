@@ -1,7 +1,5 @@
 __author__ = 'humberto'
 
-from FDependencyList import *
-
 
 class FDependency:
     """
@@ -27,13 +25,3 @@ class FDependency:
         # Use set to compare, otherwise repeated elements are allowed
         return set(self.lh) == set(other.lh) and set(self.rh) == set(other.rh)
 
-    def as_singleton(self):
-        """
-        Returns the singletons in a functional dependency, i.e., the functional dependencies with only one attribute in
-        the right hand side. If fd=[A,B]->[C,D], then [A,B]->[C] and [A,B]->[D]
-        :return: a FDependency object with singletons
-        """
-        fd_list = []
-        for rh in self.rh:
-            fd_list.append(FDependency(self.lh, [rh]))
-        return FDependencyList(fd_list)

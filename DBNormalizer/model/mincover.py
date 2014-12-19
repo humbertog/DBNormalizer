@@ -1,12 +1,14 @@
 __author__ = 'mariaslanova'
+# TODO Remove file as now this functions are part of FunctionalDependencyList
+from DBNormalizer.model.FDependencyList import *
 
-from FDependency import *
-
+# This file should be removed
 def MinimalCover(F):
     Frs = makeRightsingleton(F)
     Fex =removeExtraneous(Frs)
     Fmin = removeDuplicate(Fex)
     return [Fmin]
+
 
 def makeRightsingleton(F):
     singletonList=[]
@@ -20,11 +22,13 @@ def makeRightsingleton(F):
             singletonList.append(FDependency(fd.lh,fd.rh))
     return FDependencyList(singletonList)
 
+
 def contains(closureList,rhs):
     if closureList.count(rhs[0])>=1:
         return 1
     else:
         return 0
+
 
 def computeClosureNcheck(F,attr,rhs):
     if (contains(F.attribute_closure(attr),rhs))==1:
@@ -68,8 +72,3 @@ def removeDuplicacy(F):
         else:
             i=i+1
     return F
-
-
-
-
-

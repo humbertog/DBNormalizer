@@ -1,6 +1,6 @@
 __author__ = 'Humberto'
 
-from DBNormalizer.model.FDependency import *
+from DBNormalizer.model.FDependencyList import *
 
 
 # Instantiate 3 FDs objects:
@@ -20,9 +20,6 @@ print(closure)
 
 # Returns singleton fds:
 # If AB -> ACD, then AB->A, AB->C and AB->D RETURNS A FDependencyList
-singleton_from_fd = FDependency(['A', 'B'], ['A', 'C', 'D']).as_singleton()
-print(singleton_from_fd)
 
-# Same as above but for all the fds in the list
-singleton_from_fd_list = fds.as_singleton()
+singleton_from_fd_list = fds.makeRightsingleton()
 print(singleton_from_fd_list)
