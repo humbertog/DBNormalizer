@@ -10,6 +10,7 @@ import DBNormalizer
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+
 def read(*filenames, **kwargs):
     encoding = kwargs.get('encoding', 'utf-8')
     sep = kwargs.get('sep', '\n')
@@ -20,6 +21,7 @@ def read(*filenames, **kwargs):
     return sep.join(buf)
 
 long_description = read('README.txt', 'CHANGES.txt')
+
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -45,13 +47,13 @@ setup(
     author_email='humberto_gora@gmail.com,gabrielahrlr@gmail.com',
     description='Data base normalizer',
     long_description=long_description,
-    packages=['sandman'],
+    packages=[ ],
     include_package_data=True,
     platforms='any',
-    test_suite='sandman.test.test_sandman',
+    test_suite='',
     classifiers = [
         'Programming Language :: Python',
-        'Development Status :: 4 - Beta',
+        'Development Status :: 1 - Beta',
         'Natural Language :: English',
         'Environment :: Web Environment',
         'License :: OSI Approved :: Apache Software License',
