@@ -6,8 +6,10 @@ TODO
 
 1 - Class FDependencyList
 	(Refactor: Move the computation methods outside the class)
+	
 1.1 - Class FDComputation
 	+ computeKeys(self)
+	
 2 - Class Relation:
 	- name
 	- attributes
@@ -22,14 +24,24 @@ TODO
 	- NF3_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
 	- BCNF_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
 	- Calls to the methods in NFComputation and SQLParser
+	
 2.1 - Class NFComputation
-	+ testFD()
-	+ checkNF2(): checks if the relation is in NF2
-	+ checkNF3(): checks if the relation is in NF3
-	+ checkBCNF(): checks if the relation is in BCNF
 	+ checkNormalForm(): wrapper
+		+ checkNF2(): checks if the relation is in NF2
+		+ checkNF3(): checks if the relation is in NF3
+		+ checkBCNF(): checks if the relation is in BCNF
+		
 2.2 - Class SQLParser
-	+ readSchema: function that connects and reads the schema of a DB and returns a list of Relation objects
+	+ importSchema: function that connects and reads the schema of a DB and returns a list of Relation objects
 	+ createSQL : SQL table creation statement
-
+	
+2.3- class Normalization
+	+ proposeNorm: function that will propose normalization and returns the normalized relations based on the computation of NFComputation
+		+ NF2Decomposition: propose normalization in NF2
+		+ NF3Decomposition: ""
+		+ BCNFDecomposition: ""
+2.4- class XMLImEx
+	+ importSchema2XML: import the FDs and Schema to XML
+	+ importSchemaFromRelation: import the schema from relation and write to a xml file
+	
 3 - UI
