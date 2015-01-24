@@ -5,6 +5,8 @@ TODO
 ========
 
 1 - Class FDependencyList
+	(Refactor: Move the computation methods outside the class)
+1.1 - Class FDComputation
 	+ computeKeys(self)
 2 - Class Relation:
 	- name
