@@ -1,6 +1,7 @@
 __author__ = 'humberto'
 
 from DBNormalizer.model.FDependency import *
+from itertools import combinations
 
 class FDependencyList(list):
     """
@@ -40,6 +41,39 @@ class FDependencyList(list):
     def MinimalCover(self):
         return self.makeRightsingleton().removeExtraneous().removeDuplicacy()
 
+    def get_lhs(self):
+        attr = set()
+        for fd in self:
+            attr = attr.union(set(fd.lh))
+        return list(attr)
+
+    def get_rhs(self):
+        attr = set()
+        for fd in self:
+            attr = attr.union(set(fd.rh))
+        return list(attr)
+
+    def candidate_keys(self):
+        keys = []
+        lhs = set(self.get_lhs())
+        rhs = set(self.get_rhs())
+        attributes_in_fds = lhs.union(rhs)
+        for att in lhs:
+            closure = self.attribute_closure(list(att))
+            if set(closure) == attributes_in_fds:
+                keys = keys.append(list(att))
+
+        i = 2
+        while keys.__len__() == 0 and i <= lhs.__len__():
+            left = set(combinations(lhs, i))
+            for k in left:
+                closure = self.attribute_closure(list(k))
+                if set(closure) == attributes_in_fds:
+                    keys.append(list(k))
+            i += 1
+        return keys
+
+
     def makeRightsingleton(self):
         singletonList=[]
         for fd in self:
@@ -47,7 +81,7 @@ class FDependencyList(list):
             rhs = fd.rh
             if len(rhs)>1:
                 for attr in rhs:
-                 singletonList.append(FDependency(lhs, [attr]))
+                    singletonList.append(FDependency(lhs, [attr]))
             else:
                 singletonList.append(FDependency(fd.lh,fd.rh))
         return FDependencyList(singletonList)

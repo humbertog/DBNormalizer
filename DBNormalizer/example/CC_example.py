@@ -22,3 +22,5 @@ print(fdlist.makeRightsingleton())
 print(fdlist.makeRightsingleton().removeExtraneous())
 print(fdlist.makeRightsingleton().removeExtraneous().removeDuplicacy())
 print(fdlist.MinimalCover())
+print(fdlist.candidate_keys())
+
