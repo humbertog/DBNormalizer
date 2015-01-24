@@ -19,13 +19,15 @@ TODO
 	- NF2_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
 	- NF3_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
 	- BCNF_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
-	+ testFD(self, FD)
-	+ checkNF2(self): checks if the relation is in NF2
-	+ checkNF3(self): checks if the relation is in NF3
-	+ checkBCNF(self): checks if the relation is in BCNF
-	+ checkNormalForm(self): wrapper
-	+
+	- Calls to the methods in NFComputation and SQLParser
+2.1 - Class NFComputation
+	+ testFD()
+	+ checkNF2(): checks if the relation is in NF2
+	+ checkNF3(): checks if the relation is in NF3
+	+ checkBCNF(): checks if the relation is in BCNF
+	+ checkNormalForm(): wrapper
+2.2 - Class SQLParser
+	+ readSchema: function that connects and reads the schema of a DB and returns a list of Relation objects
 	+ createSQL : SQL table creation statement
 
-3 - readSchema: function that connects and reads the schema of a DB and returns a list of Relation objects
-4 - UI
+3 - UI
