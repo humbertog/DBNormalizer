@@ -38,10 +38,7 @@ class FDependencyList(list):
 
 
     def MinimalCover(self):
-        Frs = makeRightsingleton(self)
-        Fex =removeExtraneous(Frs)
-        Fmin = removeDuplicate(Fex)
-        return [Fmin]
+        return self.makeRightsingleton().removeExtraneous().removeDuplicacy()
 
     def makeRightsingleton(self):
         singletonList=[]
