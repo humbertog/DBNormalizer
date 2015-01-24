@@ -14,8 +14,8 @@ TODO
 	- fds
 	- inclusion dep
 	- minimalcover
-	- NF : the NF in which the relation is
 	- user_FD : a  FDependencyList object with the user defined FDs
+	- NF : the NF in which the relation is (fds + user_FDs)
 	- NF2_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
 	- NF3_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
 	- BCNF_FDs : FDs which have to be keep in order to obtain this form (fds + user_fds - fds that violate the form)
