@@ -1,11 +1,27 @@
 TODO
 ========
 
-2014/12/06:
-- Write the canonical cover method in the FDependencyList class
-    - Create Test cases to show the correctness of the program
-- Create relation object
-    - Connect to DB and instantiate a relation object
+1 - Class FDependencyList
+	+ computeKeys(self)
+2 - Class Relation:
+	- name
+	- attributes
+	- domain
+	- keys
+	- fds
+	- inclusion_dependencies
+	- minimal_cover
+	- NF
+	- NF2
+	- NF3
+	- BCNF
+	+ testFD(self, FD)
+	+ checkNF2(self): checks if the relation is in NF2
+	+ checkNF3(self): checks if the relation is in NF3
+	+ checkBCNF(self): checks if the relation is in BCNF
+	+ checkNormalForm(self): wrapper
+	+
+	+ createSQL : SQL table creation statement
 
-2014/12/13
-- NFs??
+3 - readSchema: function that connects and reads the schema of a DB and returns a list of Relation objects
+4 -
