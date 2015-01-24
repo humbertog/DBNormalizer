@@ -15,7 +15,7 @@ users_table = meta.tables['follower']
 
 
 
-tables2=insp.get_table_names()
+tables2 = insp.get_table_names()
 
 for i in tables2:
     print(i)
@@ -25,3 +25,4 @@ for i in tables2:
     print(insp.get_pk_constraint(i))
     print(insp.get_foreign_keys(i))
 
+# e!
