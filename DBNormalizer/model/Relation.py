@@ -1,7 +1,6 @@
 
 from DBNormalizer.model.FDependencyList import *
 
-
 class Relation:
     relCount = 0
 
