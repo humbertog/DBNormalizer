@@ -1,16 +1,37 @@
 __author__= 'Humberto''Gabriela'
 
-
+from DBNormalizer.model.Relation import *
 from sqlalchemy import *
 
-db = create_engine('postgresql://Gabriela:@localhost/Birdie')
+db = create_engine('postgresql://humberto:@localhost/birdie')
 insp = inspect(db)
 # birdie.echo = True
 meta = MetaData()
 meta.reflect(bind=db)
 
-tables = insp.get_table_names()
-a = tables[3]
+def readDB_schema(db_inspector):
+    db_schema = {}
+    tables = db_inspector.get_table_names()
+
+    for name in tables:
+        att = insp.get_columns(name)
+        rel = Relation(name, att)
+        db_schema[name] = rel
+
+    return db_schema
+
+db_schema = readDB_schema(insp)
+
+print(db_schema.keys())
+print(db_schema['buser'])
+print(db_schema['buser'].get_attributes())
+print(db_schema['buser'].get_attributes_type())
+print(db_schema['buser'].get_attributes_autoincrement())
+print(db_schema['buser'].get_attributes_nullable())
+print(db_schema['buser'].get_attributes_default())
+print(db_schema['buser'].get_attributes_type('username'))
+
+
 
 def read_attributes(insp, name):
     attributes = []
@@ -24,9 +45,12 @@ def read_attributes(insp, name):
 
 
 
+<<<<<<< HEAD
 
 print(read_attributes(insp, a))
 print(insp.get_columns(a))
+=======
+>>>>>>> FETCH_HEAD
 
 # print(tables)
 # for i in tables:
