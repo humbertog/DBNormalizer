@@ -23,6 +23,8 @@ def read_attributes(insp, name):
 #    adom = []
 
 
+
+
 print(read_attributes(insp, a))
 print(insp.get_columns(a))
 
