@@ -26,15 +26,18 @@ class FDependencyList(list):
         :param attributes: list of attributes for which the closure is to be computed
         :return: list containing the attributes closure
         """
-        unused = self[:]    # Copies the self (list)
+        unused = self[:]   # Copies the self (list)
         closure = set(attributes)       # Stores the attribute closure. Is set because no repeated attributes allowed.
         closure_len = 0                 # Used as stopping condition
+
         while closure.__len__() != closure_len:
             closure_len = closure.__len__()
+            unused_t = unused[:]
             for fd in unused:
                 if set(fd.lh).issubset(closure):
+                    unused_t.remove(fd)
                     closure = closure.union(set(fd.rh))
-                    unused.remove(fd)
+            unused = unused_t[:]
         return list(closure)    # Casts the set object to a list
 
 
