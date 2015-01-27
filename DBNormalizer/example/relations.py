@@ -1,7 +1,7 @@
 from DBNormalizer.model.SQLParser import *
 from sqlalchemy import *
 
-db = create_engine('postgresql://humberto:@localhost/birdie')
+db = create_engine('postgresql://Gabriela:@localhost/Birdie')
 insp = inspect(db)
 # birdie.echo = True
 meta = MetaData()
