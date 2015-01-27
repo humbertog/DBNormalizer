@@ -1,5 +1,6 @@
-from DBNormalizer.model.SQLParser import *
+from DBNormalizer.model.Relation import *
 from sqlalchemy import *
+
 
 db = create_engine('postgresql://humberto:@localhost/birdie')
 insp = inspect(db)
@@ -7,14 +8,18 @@ insp = inspect(db)
 meta = MetaData()
 meta.reflect(bind=db)
 
-db_schema = readDB_schema(insp)
+def readDB_schema(db_inspector):
+    db_schema = {}
+    tables = db_inspector.get_table_names()
 
-print(db_schema.keys())
-print(db_schema['buser'])
-print(db_schema['buser'].get_attributes())
-print(db_schema['buser'].get_attributes_type())
-print(db_schema['buser'].get_attributes_autoincrement())
-print(db_schema['buser'].get_attributes_nullable())
-print(db_schema['buser'].get_attributes_default())
-print(db_schema['buser'].get_attributes_type('username'))
+    for name in tables:
+        att = db_inspector.get_columns(name)
+        pk = db_inspector.get_pk_constraint(name)
+        unique = db_inspector.get_unique_constraints(name)
+        rel = Relation(name, schema_attributes=att, schema_keys=pk, schema_unique=unique)
+        db_schema[name] = rel
 
+    return db_schema
+
+relations = readDB_schema(insp)
+print(relations['buser'])
