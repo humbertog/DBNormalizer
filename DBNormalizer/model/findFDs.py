@@ -14,7 +14,7 @@ def find_fds(attributes, db_partition):
     return fds
 
 
-def find_fds_rhs(lhs, rhs, db_partition):
+def find_fds_rhs(lhs, rhs, db_partition, test_mode=False):
     """
     Finds all the minimal functional dependencies X->rhs with X subset of lhs. Usually lhs = U\rhs where U is the
     set of attributes in the relation. The idea of this function is to eliminate unnecessary computation using the
@@ -35,8 +35,11 @@ def find_fds_rhs(lhs, rhs, db_partition):
     while x.__len__() != 0:
         level = set()   # each level tries the proper subsets of X with length len(X)-1
         for subx in x:
-            #TODO Change this function that is for testing purposes only for the real one
-            if not test_fds(list(subx), rhs, db_partition):
+            if test_mode:
+                test = test_fds_test(list(subx), rhs, db_partition)
+            else:
+                test = test_fds(list(subx), rhs, db_partition)
+            if not test:
                 e0 = e0.union([subx])
             else:
                 e1 = set(remove_super_sets(list(subx), e1))  # removes redundancy in e1
@@ -73,7 +76,7 @@ def prune(x, y):
     return x - y
 
 
-def test_fds(lhs, rhs, fds):
+def test_fds_test(lhs, rhs, fds):
     """
     Tests if the fds lhs->rhs is satisfied in fds. This function is only for testing purposes
     :param lhs:
@@ -84,6 +87,28 @@ def test_fds(lhs, rhs, fds):
     closure = fds.attribute_closure(lhs)
     return rhs[0] in closure
 
+def test_fds(lhs_partition, rhs_partition):
+    x = True
+    k = 0
+    while x and k < len(lhs_partition):
+        element = lhs_partition[k]
+        y = False
+        z = 0
+        while not y and z < len(rhs_partition):
+            y = set(element).issubset(set(rhs_partition[z]))
+            z += 1
+        x = y
+        k += 1
+    return x
+
+
+def get_intersection(attributes, dict):
+    res = dict[attributes[0]]
+    for i in range(1,len(attributes)):
+        x = dict[attributes[i]]
+        res = list(filter(None,[list(set(a) & set(b)) for a in res for b in x]))
+    return res
+
 
 def remove_super_sets(sub_set, set_of_sets):
     """
@@ -93,3 +118,5 @@ def remove_super_sets(sub_set, set_of_sets):
     :return: list of sets
     """
     return [x for x in set_of_sets if not set(x).issuperset(set(sub_set))]
+
+
