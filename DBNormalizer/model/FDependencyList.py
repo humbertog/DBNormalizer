@@ -26,15 +26,18 @@ class FDependencyList(list):
         :param attributes: list of attributes for which the closure is to be computed
         :return: list containing the attributes closure
         """
-        unused = self[:]    # Copies the self (list)
+        unused = self[:]   # Copies the self (list)
         closure = set(attributes)       # Stores the attribute closure. Is set because no repeated attributes allowed.
         closure_len = 0                 # Used as stopping condition
+
         while closure.__len__() != closure_len:
             closure_len = closure.__len__()
+            unused_t = unused[:]
             for fd in unused:
                 if set(fd.lh).issubset(closure):
+                    unused_t.remove(fd)
                     closure = closure.union(set(fd.rh))
-                    unused.remove(fd)
+            unused = unused_t[:]
         return list(closure)    # Casts the set object to a list
 
 
@@ -54,17 +57,19 @@ class FDependencyList(list):
         return list(attr)
 
     def candidate_keys(self):
-        keys = []
+        keys = list()
         lhs = set(self.get_lhs())
         rhs = set(self.get_rhs())
         attributes_in_fds = lhs.union(rhs)
         for att in lhs:
             closure = self.attribute_closure(list(att))
-            if set(closure) == attributes_in_fds:
-                keys = keys.append(list(att))
+            if set(closure) == attributes_in_fds:#in general it should be R
+
+                keys.append(list(att))
 
         i = 2
-        while keys.__len__() == 0 and i <= lhs.__len__():
+        #while keys.__len__() == 0 and i <= lhs.__len__():
+        while i <= lhs.__len__():
             left = set(combinations(lhs, i))
             for k in left:
                 closure = self.attribute_closure(list(k))
@@ -98,6 +103,9 @@ class FDependencyList(list):
             return 1
         else:
             return 0
+    def findNonEmptySubsets(self,S):
+        subs = [set(j) for i in range(len(S)) for j in list(combinations(S, i + 1))]
+        return subs
 
     def removeExtraneous(self):
         ExtraneousList=[]
@@ -106,9 +114,10 @@ class FDependencyList(list):
             lhs = fd.lh
             rhs = fd.rh
             if len(lhs)>1:
-                for attr in lhs:
+                L=[list(j) for i in range(len(lhs)) for j in list(combinations(set(lhs),i+1))]
+                for attr in L:
                     if self.computeClosureNcheck(attr,rhs):
-                        ExtraneousList.append(FDependency([attr],rhs))
+                        ExtraneousList.append(FDependency(attr,rhs))
                         exFlag=1
                         break
                     else:
