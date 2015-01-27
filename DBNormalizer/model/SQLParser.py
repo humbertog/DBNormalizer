@@ -24,7 +24,7 @@ def get_table_partitions(table, attributes):
     return partitions
 
 
-def get_attribute_partition(table, attribute):
+def get_attribute_partition(table, attribute, db):
     query = "select " + attribute + "," + " array_agg(index) as e from (select " + attribute + ","  \
             "row_number() over() as index from " + table + ") as fool  group by " + attribute
     execute = db.execute(query)
