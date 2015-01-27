@@ -1,7 +1,6 @@
 __author__ = 'humberto'
 
-from DBNormalizer.model.FDependencyList import *
-from DBNormalizer.model.SQLParser import *
+from DBNormalizer.model.Relation import *
 
 # Give fds of a hypothetical database (for testing purposes):
 fd1 = FDependency(['A'], ['E']) # means A -> CD
@@ -13,7 +12,11 @@ print(fds1)
 
 # Finds the fds that satisfies the given lhs and rhs. The idea of this function is to eliminate unnecessary computation
 # using th fact that, if the fd X->E does not hold, then for all Y subset of X, Y->E doesn't hold either.
-res = find_fds_rhs(['A', 'B', 'C', 'D'], ['E'], fds1)
-print(res)
 
+# Creates a relation with only name and attributes
+relation1 = Relation('Test', ['A', 'B', 'C', 'D', 'E'])
+# Find the fds in the database (for testing purposes suppose the database is one in which fds1 hold)
+print(relation1)
+relation1.find_fds(fds1)
+print(relation1)
 

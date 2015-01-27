@@ -1,5 +1,6 @@
 
 from DBNormalizer.model.FDependencyList import *
+from DBNormalizer.model.findFDs import find_fds
 
 class Relation:
     relCount = 0
@@ -8,11 +9,11 @@ class Relation:
         self.name = name
         self.attributes = attributes
         self.keys = []
-        self.fds = []
+        self.fds = FDependencyList()
         Relation.relCount += 1
 
     def __str__(self):
-        return str("Name:") + str(self.name) + "\n" + "Attributes:" + str(self.attributes) + "\n" + \
+        return str("Name:") + str(self.name) + "\n" + "Attributes:" + str(self.attributes) + \
                "\n" + str("Keys: ") + str(self.keys) + "\n" + str("FDS: ") + str(self.fds)
 
     def get_attributes(self):
@@ -42,4 +43,15 @@ class Relation:
     def get_attributes_default(self, attr_name=None):
         return self.get_attributes_property(property='default', attr_name=attr_name)
 
-
+    def find_fds(self, db_partition):
+        """
+        Calls find_fds from SQLParser and computes minimal cover
+        :param db_partition:
+        """
+        fds = FDependencyList()
+        fds_in_rel = find_fds(self.attributes, db_partition)
+        for rhs in fds_in_rel.keys():
+            if fds_in_rel[rhs]:
+                for lhs in fds_in_rel[rhs]:
+                    fds.append(FDependency(lhs, [rhs]))
+        self.fds = fds.MinimalCover()
