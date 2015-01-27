@@ -56,13 +56,13 @@ class Relation:
         if type(fd) is FDependency:
             self.fds.remove(fd)
 
-    def find_fds(self, db_partition):
+    def find_fds(self, db_partition, test_mode=False):
         """
         Calls find_fds from SQLParser and computes minimal cover
         :param db_partition:
         """
         fds = FDependencyList()
-        fds_in_rel = find_fds(self.attributes, db_partition)
+        fds_in_rel = find_fds(self.attributes, db_partition, test_mode)
         for rhs in fds_in_rel.keys():
             if fds_in_rel[rhs]:
                 for lhs in fds_in_rel[rhs]:

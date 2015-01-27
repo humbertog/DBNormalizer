@@ -2,13 +2,13 @@ __author__ = 'Nantes'
 from itertools import chain, combinations
 
 
-def find_fds(attributes, db_partition):
+def find_fds(attributes, db_partition, test_mode=False):
     attr = attributes[:]
     len_attributes = attr.__len__()
     fds = {}
     for i in range(0, len_attributes):
         rhs = attr.pop(0)
-        lhs = find_fds_rhs(attr, rhs, db_partition)
+        lhs = find_fds_rhs(attr, rhs, db_partition, test_mode)
         fds[rhs] = lhs
         attr.append(rhs)
     return fds
