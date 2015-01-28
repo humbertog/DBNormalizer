@@ -36,6 +36,7 @@ t2 = relations['dependent'].SQL_statement(meta2)
 t3 = relations['employee_project'].SQL_statement(meta2)
 
 # Print create table statements:
+# NOTE: for some reason it is not working with point datatype in posgreSQL
 print(CreateTable(t1))
 print(CreateTable(t2))
 print(CreateTable(t3))
