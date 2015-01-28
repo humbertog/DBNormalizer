@@ -9,7 +9,7 @@ def get_schema_attribute_property(attr_schema, att_property='type', attr_name=No
         for x in attr_schema:
             attributes.append(x[att_property])
     else:
-        attributes = [x[att_property] for x in self.attributes if x['name'] == attr_name]
+        attributes = [x[att_property] for x in attributes if x['name'] == attr_name]
     return attributes
 
 
@@ -24,11 +24,11 @@ def get_schema_unique(unique_schema, un_property='column_names'):
     return unique
 
 
-def get_table_partitions(table, attributes):
+def get_table_partitions(table, attributes, db):
     partitions = {}
     attr = len(attributes)
     for i in range(attr):
-        partitions[attributes[i]] = get_attribute_partition(table, attributes[i])
+        partitions[attributes[i]] = get_attribute_partition(table, attributes[i],db)
     return partitions
 
 
