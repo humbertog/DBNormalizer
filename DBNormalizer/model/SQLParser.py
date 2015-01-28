@@ -40,3 +40,53 @@ def get_attribute_partition(table, attribute, db):
     for row in execute:
         x.append(row['e'])
     return x
+
+def parse_table(name, metadata, column_schema_list=None, pk_schema=None, unique_schema=None):
+    table = Table(name, metadata)
+
+    # Adds columns
+    if column_schema_list:
+        for k in column_schema_list:
+            col = parse_column(k)
+            table.append_column(col)
+
+    # Adds primary key
+    if pk_schema:
+        pk = PrimaryKeyConstraint(*pk_schema['constrained_columns'], name=pk_schema['name'])
+        table.append_constraint(pk)
+
+    # Adds unique constrain
+    if unique_schema:
+        for k in unique_schema:
+            unique = UniqueConstraint(*k['column_names'], name=k['name'])
+            table.append_constraint(unique)
+
+    return table
+
+
+def parse_column(column_schema, primary_key=False, unique=False):
+    name = column_schema['name']
+    default = column_schema['default']
+    c_type = column_schema['type']
+    nullable = column_schema['nullable']
+    autoincrement = column_schema['autoincrement']
+    return Column(name, c_type, default=default, nullable=nullable, autoincrement=autoincrement,
+                  primary_key=primary_key, unique=unique)
+
+
+def decompose_schema_attributes(schema, over_attributes):
+    new_schema = [x for x in schema if x['name'] in over_attributes]
+    return new_schema
+
+
+def decompose_schema_unique(schema, over_attributes):
+    new_schema = [x for x in schema if set(x['column_names']).issubset(set(over_attributes))]
+    return new_schema
+
+
+def decompose_schema_pk(schema, over_attributes):
+    if set(schema['constrained_columns']).issubset(set(over_attributes)):
+        new_schema = schema
+    else:
+        new_schema = {}
+    return new_schema
