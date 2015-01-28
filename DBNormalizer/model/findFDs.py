@@ -8,7 +8,7 @@ def find_fds(attributes, db_partition, test_mode=False):
     fds = {}
     for i in range(0, len_attributes):
         rhs = attr.pop(0)
-        lhs = find_fds_rhs(attr, rhs, db_partition, test_mode)
+        lhs = find_fds_rhs(attr, [rhs], db_partition, test_mode)
         fds[rhs] = lhs
         attr.append(rhs)
     return fds
@@ -32,8 +32,8 @@ def find_fds_rhs(lhs, rhs, db_partition, test_mode=False):
     e0 = set()  # set with the non-satisfied fds
     e1 = set()  # set with the satisfied fds
     set_len = lhs.__len__()
-    while x.__len__() != 0:
-        level = set()   # each level tries the proper subsets of X with length len(X)-1
+    while x.__len__() != 0 and set_len > 0:
+        level = set()  # each level tries the proper subsets of X with length len(X)-1
         for subx in x:
             if test_mode:
                 test = test_fds_test(list(subx), rhs, db_partition)
@@ -46,8 +46,8 @@ def find_fds_rhs(lhs, rhs, db_partition, test_mode=False):
                 e1 = e1.union([subx])
                 level = level.union([subx])
 
-        level = set(subsets(list(level), set_len-1))   # obtain the next level
-        e0 = set(subsets(list(e0), set_len-1))
+        level = set(subsets(list(level), set_len - 1))  # obtain the next level
+        e0 = set(subsets(list(e0), set_len - 1))
         x = prune(level, e0)  # removes the cases that are not satisfiable by means of e0
         set_len -= 1
     return [list(x) for x in list(e1)]
@@ -87,7 +87,12 @@ def test_fds_test(lhs, rhs, fds):
     closure = fds.attribute_closure(lhs)
     return rhs[0] in closure
 
-def test_fds(lhs_partition, rhs_partition):
+
+def test_fds(lhs, rhs, relation_dict):
+    lhs_partition = get_intersection(lhs, relation_dict)
+    rhs_partition = get_intersection(rhs, relation_dict)
+#    print(lhs_partition)
+#    print(rhs_partition)
     x = True
     k = 0
     while x and k < len(lhs_partition):
@@ -102,11 +107,11 @@ def test_fds(lhs_partition, rhs_partition):
     return x
 
 
-def get_intersection(attributes, dict):
-    res = dict[attributes[0]]
-    for i in range(1,len(attributes)):
-        x = dict[attributes[i]]
-        res = list(filter(None,[list(set(a) & set(b)) for a in res for b in x]))
+def get_intersection(attributes, relation_dict):
+    res = relation_dict[attributes[0]]
+    for i in range(1, len(attributes)):
+        x = relation_dict[attributes[i]]
+        res = list(filter(None, [list(set(a) & set(b)) for a in res for b in x]))
     return res
 
 
@@ -119,4 +124,13 @@ def remove_super_sets(sub_set, set_of_sets):
     """
     return [x for x in set_of_sets if not set(x).issuperset(set(sub_set))]
 
+
+# print(find_fds_rhs(['essn', 'sex', 'dependent_name', 'bdate'], ['relationship'], {'sex': [[1, 3, 6, 7], [2, 4, 5]],
+#                                                                                    'bdate': [[2], [6], [7], [3], [1],
+#                                                                                              [4], [5]],
+#                                                                                    'essn': [[1, 2, 3], [5, 6, 7], [4]],
+#                                                                                    'relationship': [[3, 4, 7], [1, 6],
+#                                                                                                     [2, 5]],
+#                                                                                    'dependent_name': [[1, 6], [5], [2],
+#                                                                                                       [7], [4], [3]]},test_mode= False))
 
