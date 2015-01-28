@@ -68,3 +68,38 @@ class Relation:
                 for lhs in fds_in_rel[rhs]:
                     fds.append(FDependency(lhs, [rhs]))
         self.fds = fds.MinimalCover()
+
+    def SQL_statement(self, metadata):
+        """
+        Returns an object of class Table (see parse_table function) that can be used to send the CREATE TABLE statement
+        to the database. This method needs, at least, the schema_attributes attribute.
+        :param metadata: metadata (SQLAlchemy)
+        :return: and object of class table
+        """
+        name = self.name
+        column_schema = self.db_schema_attributes  # Mandatory
+        pk_schema = self.db_schema_pk
+        unique_schema = self.db_schema_unique
+        return parse_table(name, metadata, column_schema_list=column_schema, pk_schema=pk_schema,
+                           unique_schema=unique_schema)
+
+    def sub_relation(self, name, over_attributes):
+        """
+        Returns a sub-relation over the attributes specified. The pk and unique constraints are dropped if
+        they are not defined completely in the sub-relation. If the schema_attributes, schema_pk and schema_unique
+        are defined, the method will use them to obtain the new sub-relation.
+        :param name: name of the new relation
+        :param over_attributes: the attributes that the sub-relation must contain
+        :return:
+        """
+        new_schema_attr = decompose_schema_attributes(self.db_schema_attributes, over_attributes)
+        new_schema_pk = decompose_schema_pk(self.db_schema_pk, over_attributes)
+        new_schema_unique = decompose_schema_unique(self.db_schema_unique, over_attributes)
+
+        new_relation = Relation(name, schema_attributes=new_schema_attr, schema_keys=new_schema_pk,
+                                schema_unique=new_schema_unique)
+
+        # Here is missing the code to determine which FDs still hold in the sub relation
+        # Once we have the Fds left in the sub-relation we can compute the candidate keys and normal forms.
+
+        return new_relation
