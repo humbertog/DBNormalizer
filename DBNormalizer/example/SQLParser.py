@@ -21,7 +21,7 @@ def readDB_schema(db_inspector):
 
 # Create connection to DB
 # The db used in this example is the one Gabriela sent in skype
-db = create_engine('postgresql+psycopg2://humberto:@localhost/dbnormalizer_test')
+db = create_engine('postgresql://Gabriela:@localhost/Test')
 meta = MetaData()
 meta.reflect(bind=db)
 # This thing read the whole schema this is the base to create the Relation objects

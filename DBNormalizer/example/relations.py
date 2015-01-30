@@ -2,7 +2,7 @@ from DBNormalizer.model.Relation import *
 from sqlalchemy import *
 
 
-db = create_engine('postgresql://humberto:@localhost/birdie')
+db = create_engine('postgresql://Gabriela:@localhost/Test')
 insp = inspect(db)
 # birdie.echo = True
 meta = MetaData()
@@ -22,4 +22,4 @@ def readDB_schema(db_inspector):
     return db_schema
 
 relations = readDB_schema(insp)
-print(relations['buser'])
+print(relations['dependent'])
