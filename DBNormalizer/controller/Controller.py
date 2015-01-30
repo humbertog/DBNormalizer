@@ -21,8 +21,10 @@ class Controller():
 
     def show_defaults(self):
         self.view.connection_panel.host.insert(0, self.model.host)
-        self.view.connection_panel.username.insert(0, 'humberto')
-        self.view.connection_panel.database.insert(0, 'dbnormalizer_test')
+        self.view.connection_panel.username.insert(0, self.model.username)
+        self.view.connection_panel.database.insert(0, self.model.database)
+        #self.view.connection_panel.username.insert(0, 'humberto')
+        #self.view.connection_panel.database.insert(0, 'dbnormalizer_test')
 
     def run(self):
         self.root.mainloop()
