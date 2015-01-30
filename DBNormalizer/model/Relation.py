@@ -2,6 +2,7 @@
 from DBNormalizer.model.FDependencyList import *
 from DBNormalizer.model.findFDs import find_fds
 from DBNormalizer.model.SQLParser import *
+from DBNormalizer.model.Normalization import *
 
 
 class Relation:
@@ -14,7 +15,11 @@ class Relation:
         self.fds = FDependencyList()
         self.NF = None
 
-        self.db_fds = None
+        # Normalization
+        self.normalization = Normalization()
+        self.NF = None
+        self.candidate_keys = None
+        self.canonical_cover = FDependencyList
 
         self.db_schema_attributes = schema_attributes
         self.db_schema_pk = schema_keys
@@ -29,9 +34,11 @@ class Relation:
             self.unique = get_schema_unique(self.db_schema_unique)
 
     def __str__(self):
-        return str("Name:") + str(self.name) + "\n" + "Attributes:" + str(self.attributes) + \
-               "\n" + str("PK: ") + str(self.key) + "\n" + str("Unique:") + str(self.unique) + "\n"\
-               + str("FDS: ") + str(self.fds)
+        return str("Name: ") + str(self.name) + "\n" + "Attributes: " + str(self.attributes) + \
+               "\n" + "PK: " + str(self.key) + "\n" + "Unique: " + str(self.unique) + "\n"\
+               + "FDS: " + str(self.fds) + "\n" + "CC:" + str(self.canonical_cover) + "\n" + "Cand keys:" + \
+               str(self.candidate_keys) + "\n" + "NF: " + str(self.NF)
+
 
     def get_attributes_type(self, attr_name=None):
         return get_schema_attribute_property(self.db_schema_attributes, att_property='type', attr_name=attr_name)
@@ -45,6 +52,31 @@ class Relation:
 
     def get_attributes_default(self, attr_name=None):
         return get_schema_attribute_property(self.db_schema_attributes, att_property='default', attr_name=attr_name)
+
+    def set_canonical_cover(self):
+        self.canonical_cover = self.fds.MinimalCover()
+
+    def set_candidate_keys(self):
+        if len(self.canonical_cover) != 0:
+            self.candidate_keys = self.normalization.findCandKeys(set(self.attributes), self.canonical_cover, self.fds)
+
+    def set_normalization(self):
+        if len(self.canonical_cover) != 0 and self.candidate_keys is not None:
+            for fd in self.canonical_cover:
+                lhs=set(fd.lh)
+                rhs=set(fd.rh)
+                self.normalization.check2NF(fd,lhs,rhs, self.candidate_keys)
+                self.normalization.check3NF(fd, lhs, rhs, self.candidate_keys)
+                self.normalization.checkBCNF(fd, lhs, rhs, self.candidate_keys)
+
+        if len(self.normalization.FDList2NF) != 0:
+            self.NF = '1NF'
+        elif len(self.normalization.FDList3NF) != 0:
+            self.NF = '2NF'
+        elif len(self.normalization.FDListBCNF) != 0:
+            self.NF = '3NF'
+        else:
+            self.NF = 'BCNF'
 
     def fds_add(self, fd):
         if type(fd) is FDependencyList:
@@ -103,3 +135,4 @@ class Relation:
         # Once we have the Fds left in the sub-relation we can compute the candidate keys and normal forms.
 
         return new_relation
+
