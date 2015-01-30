@@ -1,8 +1,5 @@
 __author__ = 'mariaslanova'
 
-
-__author__ = 'mariaslanova'
-
 from DBNormalizer.example.relations import readDB_schema
 from DBNormalizer.model.SQLParser import *
 from DBNormalizer.model.Decomp import *
