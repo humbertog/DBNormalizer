@@ -56,6 +56,7 @@ class Decomposition:
             R02=R02.union(set(X))
             #print(R02)
             F01=self.projectFDs(R0,R01,F0)
+            #print("FD:",F01)
             F02=self.projectFDs(R0,R02,F0)
             accum.append((R01,F01))
             self.decomposeBCNF(R02,F02,accum)
@@ -69,13 +70,20 @@ class Decomposition:
     def projectFDs(self,ParentRelation,DecompRelation,ParentFDs):
         T=FDependencyList()
         properset=Normalization.findNonEmptySubsets(self,DecompRelation)
+        #print('PROPERSET = ',properset)
         for X in properset:
             xclosure=ParentFDs.attribute_closure(X)
+            #print('Xclosure',xclosure)
 
             for a in xclosure:
+                #print("a:",a)
                 if DecompRelation.__contains__(a):
-                    T.append(FDependency(list(X),list(a)))
-        return T.MinimalCover()
+                    T.append(FDependency(list(X),[a]))
+
+        G=T.MinimalCover()
+        #print("FD=",G)
+        return G
+
 
 
     def addRelation(self,R1):
@@ -91,6 +99,11 @@ class Decomposition:
                 if(g.issubset(R1)):
                     self.List_Relation.remove(g)
                     #self.List_Relation.append(R1)
+                else:
+                    if R1.issubset(g):
+                        #self.List_Relation.remove(R1)
+                        return 0
+
 
             self.List_Relation.append(R1)
 
@@ -109,12 +122,13 @@ class Decomposition:
         return KeyRelations
 
     def candidateKeyChecking(self,R,MinFDs,FDs):
-        flag=True
+        flag=False
         keys=Normalization.findCandKeys(self,R,MinFDs,FDs)
         for R2 in self.List_Relation:
             for key in keys:
-                if not key.issubset(R2):
-                    flag=False
-                else:
+                if  key.issubset(R2):
                     flag=True
+                    return True
+                else:
+                    flag=False
         return flag
