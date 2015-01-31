@@ -32,7 +32,7 @@ class Decomposition:
         print("call with:",R0,F0)
         norm=Normalization()
         candKeys=norm.findCandKeys(R0,F0,F0)
-        print(candKeys)
+        #print(candKeys)
         for f in F0:
             lh=set(f.lh)
             rh=set(f.rh)
@@ -58,7 +58,8 @@ class Decomposition:
             F01=self.projectFDs(R0,R01,F0)
             #print("FD:",F01)
             F02=self.projectFDs(R0,R02,F0)
-            accum.append((R01,F01))
+            self.decomposeBCNF(R01,F01,accum)
+            #accum.append((R01,F01))
             self.decomposeBCNF(R02,F02,accum)
         else:
             accum.append((R0,F0))
