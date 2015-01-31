@@ -105,7 +105,10 @@ class Model():
             self.relations[nam].set_normalization()
             #print(self.relations[nam])
 
-
+    def update_relation(self, relation_name):
+        self.relations[relation_name].set_canonical_cover()
+        self.relations[relation_name].set_candidate_keys()
+        self.relations[relation_name].set_normalization()
 
     def get_NF(self, relation_name):
         return self.relations[relation_name].NF
@@ -139,3 +142,9 @@ class Model():
 
     def get_relation_attributes(self, relation_name):
         return self.relations[relation_name].attributes
+
+    def remove_fd_idx(self, relation_name, idx):
+        rel = self.get_relation(relation_name)
+        removed = rel.fds.remove_fd_idx(idx)
+        return removed
+

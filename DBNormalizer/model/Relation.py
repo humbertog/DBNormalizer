@@ -18,8 +18,8 @@ class Relation:
         # Normalization
         self.normalization = Normalization()
         self.NF = None
-        self.candidate_keys = None
-        self.canonical_cover = FDependencyList
+        self.candidate_keys = []
+        self.canonical_cover = FDependencyList()
 
         self.db_schema_attributes = schema_attributes
         self.db_schema_pk = schema_keys
@@ -59,6 +59,8 @@ class Relation:
     def set_candidate_keys(self):
         if len(self.canonical_cover) != 0:
             self.candidate_keys = self.normalization.findCandKeys(set(self.attributes), self.canonical_cover, self.fds)
+        else:
+            self.candidate_keys = [set(self.attributes)]
 
     def set_normalization(self):
         if len(self.canonical_cover) != 0 and self.candidate_keys is not None:
