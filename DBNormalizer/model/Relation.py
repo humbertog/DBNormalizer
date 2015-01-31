@@ -115,7 +115,7 @@ class Relation:
         return parse_table(name, metadata, column_schema_list=column_schema, pk_schema=pk_schema,
                            unique_schema=unique_schema)
 
-    def sub_relation(self, name, over_attributes):
+    def sub_relation(self, name, over_attributes, fds=None):
         """
         Returns a sub-relation over the attributes specified. The pk and unique constraints are dropped if
         they are not defined completely in the sub-relation. If the schema_attributes, schema_pk and schema_unique
@@ -130,6 +130,8 @@ class Relation:
 
         new_relation = Relation(name, schema_attributes=new_schema_attr, schema_keys=new_schema_pk,
                                 schema_unique=new_schema_unique)
+        if fds is not None:
+            new_relation.fds_add(fds)
 
         # Here is missing the code to determine which FDs still hold in the sub relation
         # Once we have the Fds left in the sub-relation we can compute the candidate keys and normal forms.
