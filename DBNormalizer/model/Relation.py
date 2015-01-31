@@ -63,7 +63,7 @@ class Relation:
             self.candidate_keys = [set(self.attributes)]
 
     def set_normalization(self):
-        if len(self.canonical_cover) != 0 and self.candidate_keys is not None:
+        if len(self.canonical_cover) != 0:
             for fd in self.canonical_cover:
                 lhs=set(fd.lh)
                 rhs=set(fd.rh)
@@ -71,14 +71,17 @@ class Relation:
                 self.normalization.check3NF(fd, lhs, rhs, self.candidate_keys)
                 self.normalization.checkBCNF(fd, lhs, rhs, self.candidate_keys)
 
-        if len(self.normalization.FDList2NF) != 0:
-            self.NF = '1NF'
-        elif len(self.normalization.FDList3NF) != 0:
-            self.NF = '2NF'
-        elif len(self.normalization.FDListBCNF) != 0:
-            self.NF = '3NF'
+            if len(self.normalization.FDList2NF) != 0:
+                self.NF = '1NF'
+            elif len(self.normalization.FDList3NF) != 0:
+                self.NF = '2NF'
+            elif len(self.normalization.FDListBCNF) != 0:
+                self.NF = '3NF'
+            else:
+                self.NF = 'BCNF'
+
         else:
-            self.NF = 'BCNF'
+            self.NF = 'NoFDs'
 
     def fds_add(self, fd):
         if type(fd) is FDependencyList:

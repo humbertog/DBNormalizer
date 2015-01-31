@@ -49,7 +49,6 @@ class Controller():
         name = self.current_relation
         self.model.update_relation(name)
         self.update_right_panel(name)
-        print(self.model.get_relation(name))
 
     def add_relation(self, parent, relation, original=True):
         if original:
@@ -105,6 +104,7 @@ class Controller():
             self.clear_right_panel()
             self.view.right_panel.frame_one_t.subFrame1.var_name.set(name)
             nf = self.model.get_NF(name)
+            print(nf)
             self.view.right_panel.frame_one_t.subFrame1.var_nf.set(nf)
 
             # Candidate keys:
