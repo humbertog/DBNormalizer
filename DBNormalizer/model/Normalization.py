@@ -118,6 +118,8 @@ class Normalization:
     #zclosure is set that contains closure of Z
     def findCandKeys(self,R, minFDs,FDs):
         candKeys = list()
+        if   minFDs==[]:
+             return R
         X = Normalization.getNecessaryAttribute(self,R, minFDs)
         Y = Normalization.getUseLessAttribute(self,R, minFDs)
         M = Normalization.getUsefulAttribute(self,R,X, Y)
