@@ -14,10 +14,16 @@ class Controller():
         self.view = View(self.root)
 
         #
+        self.current_relation = None
+
         self.view.side_panel.relation_tree.tree.bind("<Double-1>", self.select_relation)
         self.view.connection_panel.connect_button.bind("<Button>", self.get_database_metadata)
         self.view.right_panel.frame_four_t.subFrame4.\
             buttons_frame.button_normalization.bind("<Button>", self.compute_decomposed_relations)
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.button_remove.bind("<Button>",
+                                                                                                       self.remove_fd)
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
+            button_save.bind("<Button>", self.save_relation)
 
         #
         self.show_defaults()
@@ -30,6 +36,20 @@ class Controller():
 
     def run(self):
         self.root.mainloop()
+
+    def remove_fd(self, event):
+        fd_idx = self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.curselection()
+        if len(fd_idx) != 0:
+            fd = self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.selection_get()
+            removed = self.model.remove_fd_idx(self.current_relation, fd_idx[0])
+            print(removed)
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.delete(fd_idx[0])
+
+    def save_relation(self, event):
+        name = self.current_relation
+        self.model.update_relation(name)
+        self.update_right_panel(name)
+        print(self.model.get_relation(name))
 
     def add_relation(self, parent, relation, original=True):
         if original:
@@ -77,8 +97,11 @@ class Controller():
         item_values = self.view.side_panel.relation_tree.tree.item(item)
         kind = item_values['values'][0]
         name = item_values['text']
-
         if kind == 'relation':
+            self.current_relation = name
+            self.update_right_panel(name)
+
+    def update_right_panel(self, name):
             self.clear_right_panel()
             self.view.right_panel.frame_one_t.subFrame1.var_name.set(name)
             nf = self.model.get_NF(name)
@@ -87,7 +110,7 @@ class Controller():
             # Candidate keys:
             self.view.right_panel.frame_three_t.subFrame3.keys_list.delete(0,END)
             keys = self.model.get_candidate_keys(name)
-            if keys is not None:
+            if len(keys) != 0:
                 for key in keys:
                     self.view.right_panel.frame_three_t.subFrame3.keys_list.insert(END, list(key))
 
