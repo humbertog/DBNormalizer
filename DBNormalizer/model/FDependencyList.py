@@ -42,6 +42,8 @@ class FDependencyList(list):
 
 
     def MinimalCover(self):
+        if self==[]:
+            return []
         return self.makeRightsingleton().removeExtraneous().removeDuplicacy()
 
     def get_lhs(self):
