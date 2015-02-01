@@ -5,16 +5,17 @@ from tkinter import *
 class MyDialog:
     def __init__(self, parent):
         top = self.top = Toplevel(parent)
+        self.top.geometry("400x150+100+50")
+        self.top.resizable(0,0)
         self.parent = parent
         self.myLabel = Label(top, text='Add functional dependency')
         self.myLabel.pack()
 
         self.myEntryBox_left = Entry(top)
-        self.myEntryBox_left.pack()
+        self.myEntryBox_left.pack(expand=1, fill=X)
 
         self.myEntryBox_right = Entry(top)
-        self.myEntryBox_right.pack()
-
+        self.myEntryBox_right.pack(expand=1, fill=X)
 
         self.mySubmitButton = Button(top, text='Add', command=self.send)
         self.mySubmitButton.pack()
@@ -24,6 +25,8 @@ class MyDialog:
 
         self.fd = None
 
+        self.top.transient(self.parent)
+        self.top.grab_set()
         #self.parent.wait_window(top)
 
     def send(self):

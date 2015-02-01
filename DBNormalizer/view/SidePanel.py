@@ -35,8 +35,8 @@ class RelationTreeButtons(Frame):
         self.add_attribute_button = ttk.Button(self, text='Add Attribute')
         self.add_attribute_button.pack(side=LEFT)
 
-        self.remove_relation_button = ttk.Button(self, text="Remove")
-        self.remove_relation_button.pack(side=LEFT)
+        #self.remove_relation_button = ttk.Button(self, text="Remove")
+        #self.remove_relation_button.pack(side=LEFT)
 
 
 class RelationTree(Frame):

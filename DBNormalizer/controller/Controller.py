@@ -9,7 +9,7 @@ class Controller():
         self.model = Model()
 
         self.root = Tk()
-        self.root.geometry("1000x650+300+300")
+        self.root.geometry("1000x650+100+50")
         self.root.title("Super DB Normalizer")
         self.view = View(self.root)
 
@@ -51,7 +51,6 @@ class Controller():
 
     def add_user_relation(self, event):
         inputDialog_rel = MyDialog_Relation(self.root)
-
         self.root.wait_window(inputDialog_rel.top)
 
         print(inputDialog_rel.attr)
