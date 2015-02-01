@@ -1,4 +1,4 @@
-__author__ = 'mariaslanova','Bishnu','Harsha'
+__author__ = 'Paris'
 
 from itertools import combinations
 from DBNormalizer.model.mincover import *

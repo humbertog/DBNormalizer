@@ -1,4 +1,4 @@
-__author__ = 'humberto'
+__author__ = 'Nantes'
 
 from DBNormalizer.model.Relation import Relation
 from DBNormalizer.model.SQLParser import get_table_partitions
@@ -79,16 +79,14 @@ class Model():
         f.close()
         keys =list(self.decomposition_match.keys())
         f = open(filename,'a')
-
         for relation in keys:
             m = self.get_decomposition_names(relation)
             for subrelation in m:
                 s = self.relations[subrelation].SQL_statement(meta_new)
                 l = CreateTable(s)
+                print(l)
                 f.write(str(l))
         f.close()
-
-
 
 
 

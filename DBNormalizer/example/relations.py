@@ -1,3 +1,4 @@
+__author__ = 'Nantes'
 from DBNormalizer.model.Relation import *
 from sqlalchemy import *
 

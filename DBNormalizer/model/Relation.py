@@ -1,4 +1,4 @@
-
+__author__ = 'Nantes'
 from DBNormalizer.model.FDependencyList import *
 from DBNormalizer.model.findFDs import find_fds
 from DBNormalizer.model.SQLParser import *
@@ -148,7 +148,7 @@ class Relation:
         :param over_attributes: the attributes that the sub-relation must contain
         :return:
         """
-        if self.db_schema_attributes and self.db_schema_pk and self.db_schema_unique:
+        if self.db_schema_attributes:
             new_schema_attr = decompose_schema_attributes(self.db_schema_attributes, over_attributes)
             new_schema_pk = decompose_schema_pk(self.db_schema_pk, over_attributes)
             new_schema_unique = decompose_schema_unique(self.db_schema_unique, over_attributes)

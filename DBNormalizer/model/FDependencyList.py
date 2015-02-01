@@ -1,4 +1,4 @@
-__author__ = 'humberto'
+__author__ = 'Nantes'
 
 from DBNormalizer.model.FDependency import *
 from itertools import combinations

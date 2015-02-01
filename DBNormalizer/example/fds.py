@@ -1,4 +1,4 @@
-__author__ = 'Humberto'
+__author__ = 'Nantes'
 
 from DBNormalizer.model.FDependencyList import *
 
