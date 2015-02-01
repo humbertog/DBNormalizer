@@ -80,7 +80,7 @@ class Normalization:
     #S=[{LHSs},{RHSs}]
     #necessary is the necessary attributes
     def getNecessaryAttribute(self,R, minFDs):
-        S = self.getLnRSet(minFDs)
+        S = Normalization.getLnRSet(self,minFDs)
         necessary = R.difference(S[0].union(S[1]))
         necessary = necessary.union(S[0].difference(S[1]))
         return necessary
@@ -90,7 +90,7 @@ class Normalization:
     #S=[{LHSs},{RHSs}]
     #useless is the useless attributes
     def getUseLessAttribute(self,R, minFDs):
-        S = self.getLnRSet(minFDs)
+        S = Normalization.getLnRSet(self,minFDs)
         useless = S[1].difference(S[0])
         return useless
 
@@ -118,16 +118,16 @@ class Normalization:
     #zclosure is set that contains closure of Z
     def findCandKeys(self,R, minFDs,FDs):
         candKeys = list()
-        X = self.getNecessaryAttribute(R, minFDs)
-        Y = self.getUseLessAttribute(R, minFDs)
-        M = self.getUsefulAttribute(R,X, Y)
+        X = Normalization.getNecessaryAttribute(self,R, minFDs)
+        Y = Normalization.getUseLessAttribute(self,R, minFDs)
+        M = Normalization.getUsefulAttribute(self,R,X, Y)
         if(X!=set()):
             xclosure =set(FDs.attribute_closure(X))
             print(xclosure)
             if (xclosure == R):
                 candKeys.append(X)
-        L = self.findNonEmptySubsets(M)
-        L = self.addedL(L, X)
+        L = Normalization.findNonEmptySubsets(self,M)
+        L = Normalization.addedL(self,L, X)
         i = 0
         while L != []:
             i = i + 1
@@ -136,7 +136,7 @@ class Normalization:
             zclosure = set(FDs.attribute_closure(Z))
             if (zclosure == R):
                 candKeys.append(Z)
-                self.removeSuperSet(Z, L)
+                Normalization.removeSuperSet(self,Z, L)
         return candKeys
 
 
