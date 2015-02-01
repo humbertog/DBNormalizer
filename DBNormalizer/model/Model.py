@@ -37,35 +37,56 @@ class Model():
             attr = rel.attributes
             canonical_cover = rel.canonical_cover
             # Decomposition proposal:
-            if decomp == '3NF':
-                dec_proposal = dec.proposal3NF(set(attr), canonical_cover, (rel.fds))
-            else:
-                dec_proposal = dec.proposalBCNF(set(attr), canonical_cover)
-
-            # Saves the decomposition in a dictionary:
             dec_relation_list = []
-            i = 1
 
-            for tup in dec_proposal:
-                sub_name = name + '_' + str(i)
-                dec_relation_list.append(sub_name)
-                new_attr = list(tup[0])
-                new_fds = FDependencyList(tup[1])
-                new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+            # Caso en que no hay FDs
+            if len(rel.fds) == 0:
+                sub_name = name + "_1"
+                new_relation = rel.sub_relation(sub_name, attr)
+                self.relations[sub_name] = new_relation
+                new_relation.set_candidate_keys()
+                new_relation.set_normalization()
+                decomposition_dic[name] = [sub_name]
+            elif rel.NF == 'BCNF':
+                sub_name = name + "_1"
+                new_relation = rel.sub_relation(sub_name, attr, rel.fds)
+                self.relations[sub_name] = new_relation
                 new_relation.set_canonical_cover()
                 new_relation.set_candidate_keys()
                 new_relation.set_normalization()
-                self.relations[sub_name] = new_relation
+                decomposition_dic[name] = [sub_name]
+            else:
+                if decomp == '3NF':
+                    dec_proposal = dec.proposal3NF(set(attr), canonical_cover, (rel.fds))
+                else:
+                    dec_proposal = dec.proposalBCNF(set(attr), canonical_cover)
 
-                i += 1
+                # Saves the decomposition in a dictionary:
 
-            decomposition_dic[name] = dec_relation_list
+                i = 1
+
+                for tup in dec_proposal:
+                    sub_name = name + '_' + str(i)
+                    dec_relation_list.append(sub_name)
+                    new_attr = list(tup[0])
+                    new_fds = FDependencyList(tup[1])
+                    new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+                    new_relation.set_canonical_cover()
+                    new_relation.set_candidate_keys()
+                    new_relation.set_normalization()
+
+                    self.relations[sub_name] = new_relation
+                    i += 1
+
+                decomposition_dic[name] = dec_relation_list
 
         self.decomposition_match = decomposition_dic
 
 
 
     def delete_BCNF_decomposition_proposal(self):
+        print(self.decomposition_match)
+        print(self.decomposition_match.keys())
         for rel_name in self.decomposition_match.keys():
             dec_list = self.get_decomposition_names(rel_name)
             for dec in dec_list:
@@ -122,7 +143,10 @@ class Model():
         names = list(self.relations.keys())
         for i in range(0,len(names)):
             nam = names[i]
+            print("-------------Reading:------------", nam)
             partitions_dict = get_table_partitions(nam, self.relations[nam].attributes, self.engine)
+            print("---------------------------------")
+            print(self.relations[nam])
             self.relations[nam].find_fds(partitions_dict)
 
             # Compute the canicalcover, candidate keys and normal form

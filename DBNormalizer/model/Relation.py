@@ -10,8 +10,8 @@ class Relation:
     def __init__(self, name, attributes=None, schema_attributes=None, schema_keys=None, schema_unique=None):
         self.name = name
         self.attributes = attributes
-        self.key = None
-        self.unique = None
+        self.key = []
+        self.unique = []
         self.fds = FDependencyList()
         self.NF = None
 
@@ -64,8 +64,8 @@ class Relation:
             return 1
 
     def set_canonical_cover(self):
-
-        self.canonical_cover = self.fds.MinimalCover()
+        if len(self.fds) > 0:
+            self.canonical_cover = self.fds.MinimalCover()
 
     def set_candidate_keys(self):
         if len(self.canonical_cover) != 0:
@@ -111,13 +111,13 @@ class Relation:
         if type(fd) is FDependency:
             self.fds.remove(fd)
 
-    def find_fds(self, db_partition, test_mode=False):
+    def find_fds(self, db_partition, test_mode=False, pk=[], uk=[]):
         """
         Calls find_fds from SQLParser and computes minimal cover
         :param db_partition:
         """
         fds = FDependencyList()
-        fds_in_rel = find_fds(self.attributes, db_partition, test_mode)
+        fds_in_rel = find_fds(self.attributes, db_partition, test_mode, pk=self.key, uk=self.unique)
         for rhs in fds_in_rel.keys():
             if fds_in_rel[rhs]:
                 for lhs in fds_in_rel[rhs]:

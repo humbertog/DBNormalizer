@@ -248,6 +248,8 @@ class Controller():
         password = self.view.connection_panel.password.get()
         database = self.view.connection_panel.database.get()
 
+        self.model = Model()
+
         self.model.set_db_connection_params(username, password, host, database, port)
 
         self.model.get_metadata()

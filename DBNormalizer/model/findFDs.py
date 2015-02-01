@@ -2,13 +2,22 @@ __author__ = 'Nantes'
 from itertools import chain, combinations
 
 
-def find_fds(attributes, db_partition, test_mode=False):
+def find_fds(attributes, db_partition, test_mode=False, pk=[], uk=[]):
     attr = attributes[:]
     len_attributes = attr.__len__()
     fds = {}
+    print(pk)
     for i in range(0, len_attributes):
         rhs = attr.pop(0)
-        lhs = find_fds_rhs(attr, [rhs], db_partition, test_mode)
+        lhs_in = attr[:]
+        print("---------Entra--------")
+        if set(pk).issubset(set(lhs_in)):
+            lhs_in = list(set(lhs_in) - set(pk))
+        for u in uk:
+            if set(u).issubset(set(lhs_in)):
+                lhs_in = list(set(lhs_in) - set(u))
+
+        lhs = find_fds_rhs(lhs_in, [rhs], db_partition, test_mode)
         fds[rhs] = lhs
         attr.append(rhs)
     return fds
@@ -107,11 +116,35 @@ def test_fds(lhs, rhs, relation_dict):
     return x
 
 
+# def get_intersection(attributes, relation_dict):
+#     res = relation_dict[attributes[0]]
+#     print("--entra intersection----")
+#     for i in range(1, len(attributes)):
+#         x = relation_dict[attributes[i]]
+#         res = [set(a).intersection(set(b)) for a in res for b in x]
+#         #res = list(filter(None, [list(set(a) & set(b)) for a in res for b in x]))
+#     print("--sale intersection----")
+#     return res
+
 def get_intersection(attributes, relation_dict):
     res = relation_dict[attributes[0]]
+
     for i in range(1, len(attributes)):
         x = relation_dict[attributes[i]]
-        res = list(filter(None, [list(set(a) & set(b)) for a in res for b in x]))
+        res_list = []
+        for i in x:
+            len_i = len(i)
+            k = 0
+            while len_i > 0:
+                j = res[k]
+                inter = set(i).intersection(set(j))
+                if len(inter) != 0:
+                    len_inter = len(inter)
+                    len_i = len_i - len_inter
+                    res_list.append(list(inter))
+                k += 1
+        res = res_list
+
     return res
 
 
