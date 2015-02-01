@@ -118,27 +118,38 @@ class Normalization:
     #zclosure is set that contains closure of Z
     def findCandKeys(self,R, minFDs,FDs):
         candKeys = list()
-        if   minFDs==[]:
-             return R
-        X = Normalization.getNecessaryAttribute(self,R, minFDs)
-        Y = Normalization.getUseLessAttribute(self,R, minFDs)
-        M = Normalization.getUsefulAttribute(self,R,X, Y)
+        X = self.getNecessaryAttribute(R, minFDs)
+        #print(X)
+        Y = self.getUseLessAttribute(R, minFDs)
+        #print(Y)
+        M = self.getUsefulAttribute(R,X, Y)
+        #print(M)
+        L = self.findNonEmptySubsets(M)
         if(X!=set()):
             xclosure =set(FDs.attribute_closure(X))
-            print(xclosure)
+            #print(xclosure)
             if (xclosure == R):
+                #print("True")
                 candKeys.append(X)
-        L = Normalization.findNonEmptySubsets(self,M)
-        L = Normalization.addedL(self,L, X)
-        i = 0
+                #print(candKeys)
+            else:
+                L = self.addedL(L, X)
+
+
+        #L = self.findNonEmptySubsets(M)
+        #L = self.addedL(L, X)
+        #print(L)
+        #i = 0
         while L != []:
-            i = i + 1
+            #i = i + 1
             Z = L[0]
             del L[0]
             zclosure = set(FDs.attribute_closure(Z))
             if (zclosure == R):
+                #candKeys=self.addNewKey(Z,candKeys)
                 candKeys.append(Z)
-                Normalization.removeSuperSet(self,Z, L)
+                #candKeys=self.removeSuperSet(Z,candKeys)
+                L=self.removeSuperSet(Z, L)
         return candKeys
 
 

@@ -56,6 +56,38 @@ class Model():
 
         self.decomposition_BCNF_match = decomposition_dic
 
+
+    def compute_normalization_proposal_3NF(self):
+        self.delete_BCNF_decomposition_proposal()
+        dec = Decomposition()
+        decomposition_dic = {}
+        for name in self.original_relations_names:
+            rel = self.relations[name]
+            attr = rel.attributes
+            canonical_cover = rel.canonical_cover
+            # Decomposition proposal:
+            dec_proposal = dec.proposal3NF(set(attr), canonical_cover, (rel.fds))
+            # Saves the decomposition in a dictionary:
+            dec_relation_list = []
+            i = 1
+            for tup in dec_proposal:
+                sub_name = name + '_' + str(i)
+                dec_relation_list.append(sub_name)
+                new_attr = list(tup[0])
+                new_fds = FDependencyList(tup[1])
+                new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+                new_relation.set_canonical_cover()
+                new_relation.set_candidate_keys()
+                new_relation.set_normalization()
+
+                self.relations[sub_name] = new_relation
+                i += 1
+
+            decomposition_dic[name] = dec_relation_list
+
+        self.decomposition_BCNF_match = decomposition_dic
+
+
     def delete_BCNF_decomposition_proposal(self):
         for rel_name in self.decomposition_BCNF_match.keys():
             dec_list = self.get_decomposition_names(rel_name)
@@ -156,3 +188,13 @@ class Model():
         rhs_format = [x.strip() for x in rhs]
         fd = FDependency(lhs_format, rhs_format)
         rel.fds_add(fd)
+
+    def get_violation(self, relation_name, nf='2NF'):
+        rel = self.get_relation(relation_name)
+        if nf == '2NF':
+            ret = rel.normalization.FDList2NF
+        elif nf == '3NF':
+            ret = rel.normalization.FDList3NF
+        else:
+            ret = rel.normalization.FDListBCNF
+        return ret

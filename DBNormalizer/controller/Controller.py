@@ -59,6 +59,20 @@ class Controller():
         self.model.update_relation(name)
         self.update_right_panel(name)
 
+    def update_violations(self):
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.delete(1.0, END)
+
+        nf2 = self.model.get_violation(self.current_relation, nf='2NF')
+        nf3 = self.model.get_violation(self.current_relation, nf='3NF')
+        bcnf = self.model.get_violation(self.current_relation, nf='BCNF')
+
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, '2NF: \n')
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, str(nf2))
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, "\n3NF: \n")
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, str(nf3))
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, "\nBCNF: \n")
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, str(bcnf))
+
     def add_relation(self, parent, relation, original=True):
         if original:
             val = ['relation', 'original', relation.name]
@@ -85,7 +99,8 @@ class Controller():
 
     def compute_decomposed_relations(self, event):
         self.delete_decomposition()
-        self.model.compute_normalization_proposal_BCNF()
+        #self.model.compute_normalization_proposal_BCNF()
+        self.model.compute_normalization_proposal_3NF()
         print(self.model.relations)
         relation_names = self.model.get_original_relations_names()
         for name in relation_names:
@@ -136,6 +151,9 @@ class Controller():
             if len(fds) != 0:
                 for fd in fds:
                     self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.insert(END,fd)
+
+            # FDS violations:
+            self.update_violations()
 
 
     def get_database_metadata(self, event):

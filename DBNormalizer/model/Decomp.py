@@ -1,6 +1,9 @@
 __author__ = 'mariaslanova','Bishnu','Harsha'
 
 from DBNormalizer.model.Normalization import *
+
+N = Normalization()
+
 class Decomposition:
     def __init__(self):
         self.List_Relation=list()
@@ -70,7 +73,7 @@ class Decomposition:
 
     def projectFDs(self,ParentRelation,DecompRelation,ParentFDs):
         T=FDependencyList()
-        properset=Normalization.findNonEmptySubsets(self,DecompRelation)
+        properset=N.findNonEmptySubsets(DecompRelation)
         #print('PROPERSET = ',properset)
         for X in properset:
             xclosure=ParentFDs.attribute_closure(X)
@@ -119,12 +122,12 @@ class Decomposition:
     #N=Normalization ()
     def createKeyRelation(self,R,MinFDs,FDs):
         #KeyRelations=list()
-        KeyRelations=Normalization.findCandKeys(self,R,MinFDs,FDs)
+        KeyRelations=N.findCandKeys(R,MinFDs,FDs)
         return KeyRelations
 
     def candidateKeyChecking(self,R,MinFDs,FDs):
         flag=False
-        keys=Normalization.findCandKeys(self,R,MinFDs,FDs)
+        keys=N.findCandKeys(R,MinFDs,FDs)
         for R2 in self.List_Relation:
             for key in keys:
                 if  key.issubset(R2):

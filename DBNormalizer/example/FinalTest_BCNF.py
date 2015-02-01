@@ -7,7 +7,7 @@ from DBNormalizer.model.Decomp import *
 N=Normalization()
 D=Decomposition()
 
-db = create_engine('postgresql://mariaslanova:@localhost/Test1')
+db = create_engine('postgresql://humberto:@localhost/dbnormalizer_test')
 insp = inspect(db)
 meta = MetaData()
 meta.reflect(bind=db)

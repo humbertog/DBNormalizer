@@ -64,6 +64,9 @@ class Relation:
 
     def set_normalization(self):
         if len(self.canonical_cover) != 0:
+            self.normalization.FDListBCNF = FDependencyList()
+            self.normalization.FDList3NF = FDependencyList()
+            self.normalization.FDList2NF = FDependencyList()
             for fd in self.canonical_cover:
                 lhs=set(fd.lh)
                 rhs=set(fd.rh)
@@ -105,7 +108,8 @@ class Relation:
             if fds_in_rel[rhs]:
                 for lhs in fds_in_rel[rhs]:
                     fds.append(FDependency(lhs, [rhs]))
-        self.fds = fds.MinimalCover()
+        #self.fds = fds.MinimalCover()
+        self.fds = fds
 
     def SQL_statement(self, metadata):
         """
@@ -138,9 +142,6 @@ class Relation:
                                 schema_unique=new_schema_unique)
         if fds is not None:
             new_relation.fds_add(fds)
-
-        # Here is missing the code to determine which FDs still hold in the sub relation
-        # Once we have the Fds left in the sub-relation we can compute the candidate keys and normal forms.
 
         return new_relation
 

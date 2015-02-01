@@ -105,7 +105,9 @@ class FDS_notebook(Frame):
         self.tab2 = FDS_tab2(None)
         self.n.add(self.tab2, text='Minimal Cover', sticky=N+E+S+W)
         self.tab3=FDS_tab3(None)
-        self.n.add(self.tab3, text='Table Information', sticky=N+E+S+W)
+        self.n.add(self.tab3, text='Normal Form Violations', sticky=N+E+S+W)
+        self.tab4=FDS_tab4(None)
+        self.n.add(self.tab4, text='Table Information', sticky=N+E+S+W)
         #self.n.grid(sticky=N)
         self.n.pack(expand=1, fill=BOTH)
 
@@ -149,7 +151,7 @@ class FDS_tab2(Frame):
         #self.pack(anchor=N, expand=1, fill=BOTH)
 
         self.cover_table = Listbox(self)
-        self.cover_table.pack(expand=1, fill=BOTH)
+        #self.cover_table.pack(expand=1, fill=BOTH)
 
         ysb = ttk.Scrollbar(self.cover_table, orient=VERTICAL, command=self.cover_table.yview)
         xsb = ttk.Scrollbar(self.cover_table,orient=HORIZONTAL, command=self.cover_table.xview)
@@ -162,6 +164,19 @@ class FDS_tab2(Frame):
 
 
 class FDS_tab3(Frame):
+    def __init__(self, parent):
+        Frame.__init__(self,parent)
+        #self.pack(anchor=N, expand=1, fill=BOTH)
+
+        self.text_box = Text(self, height=10)
+        self.text_box.pack(expand=1, fill=BOTH)
+
+        ysb = ttk.Scrollbar(self.text_box, orient=VERTICAL, command=self.text_box.yview)
+        self.text_box['yscroll'] = ysb.set
+        ysb.pack(side=RIGHT, fill=Y)
+
+
+class FDS_tab4(Frame):
     def __init__(self, parent):
         Frame.__init__(self,parent)
         #self.pack(anchor=N, expand=1, fill=BOTH)
