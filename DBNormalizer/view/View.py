@@ -4,6 +4,9 @@ from DBNormalizer.view.ConnectionPannel import *
 from DBNormalizer.view.SidePanel import *
 from DBNormalizer.view.RightPanel import *
 from DBNormalizer.view.FD_topWindow import *
+from DBNormalizer.view.AC_topWindow import *
+from DBNormalizer.view.AddRelAttribute import *
+
 
 class View():
     def __init__(self, parent):

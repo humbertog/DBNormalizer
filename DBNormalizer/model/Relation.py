@@ -53,6 +53,16 @@ class Relation:
     def get_attributes_default(self, attr_name=None):
         return get_schema_attribute_property(self.db_schema_attributes, att_property='default', attr_name=attr_name)
 
+    def add_attributes(self, attributes):
+        if self.attributes is None:
+            self.attributes = [attributes]
+            return 0
+        elif attributes not in self.attributes:
+            self.attributes.append(attributes)
+            return 0
+        else:
+            return 1
+
     def set_canonical_cover(self):
 
         self.canonical_cover = self.fds.MinimalCover()
@@ -138,12 +148,15 @@ class Relation:
         :param over_attributes: the attributes that the sub-relation must contain
         :return:
         """
-        new_schema_attr = decompose_schema_attributes(self.db_schema_attributes, over_attributes)
-        new_schema_pk = decompose_schema_pk(self.db_schema_pk, over_attributes)
-        new_schema_unique = decompose_schema_unique(self.db_schema_unique, over_attributes)
+        if self.db_schema_attributes and self.db_schema_pk and self.db_schema_unique:
+            new_schema_attr = decompose_schema_attributes(self.db_schema_attributes, over_attributes)
+            new_schema_pk = decompose_schema_pk(self.db_schema_pk, over_attributes)
+            new_schema_unique = decompose_schema_unique(self.db_schema_unique, over_attributes)
 
-        new_relation = Relation(name, schema_attributes=new_schema_attr, schema_keys=new_schema_pk,
-                                schema_unique=new_schema_unique)
+            new_relation = Relation(name, schema_attributes=new_schema_attr, schema_keys=new_schema_pk,
+                                    schema_unique=new_schema_unique)
+        else:
+            new_relation = Relation(name, over_attributes)
         if fds is not None:
             new_relation.fds_add(fds)
 

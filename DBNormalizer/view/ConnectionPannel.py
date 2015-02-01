@@ -1,6 +1,7 @@
 __author__ = 'humberto'
 
 from tkinter import *
+from tkinter import ttk
 
 class ConnectionPanel(Frame):
     def __init__(self, parent):
@@ -41,3 +42,6 @@ class ConnectionPanel(Frame):
 
         self.connect_button.grid(column=4,row=2)
         #self.cancel_button.grid(column=0,row=6)
+
+        self.sql_output_button = Button(self, text="Export DDL")
+        self.sql_output_button.grid(column=5,row=2,sticky='EW')
