@@ -36,14 +36,8 @@ class Controller():
         self.view.right_panel.frame_three_t.attributeButton.button_attribute_closure.\
             bind("<Button>", self.get_attr_closure)
 
-
-        # Attribute Closure
-
-
         #
         self.show_defaults()
-
-
 
     def show_defaults(self):
         self.view.connection_panel.host.insert(0, self.model.host)
@@ -57,10 +51,7 @@ class Controller():
     def add_fd(self, event):
         inputDialog = MyDialog(self.root)
         self.root.wait_window(inputDialog.top)
-<<<<<<< HEAD
-  #      print(inputDialog)
-=======
->>>>>>> 65f887bad9f29c3ec593898c9e3defc2f65680ab
+
         if inputDialog.fd is not None:
             self.model.add_fd(inputDialog.fd, self.current_relation)
 
@@ -186,14 +177,6 @@ class Controller():
             self.update_right_panel(name)
 
 
-    # def update_attribute_closure(self, attr, name):
-    #    # self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.set()
-    #    # self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.delete(0,END)
-    #     closure = self.model.get_attr_closure(self.inputDialog2.attr, self.name)
-    #     if len(closure) != 0:
-    #         for a in closure:
-    #             self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.insert(END, a)
-
     def update_right_panel(self, name):
             self.clear_right_panel()
             self.view.right_panel.frame_one_t.subFrame1.var_name.set(name)
@@ -226,10 +209,6 @@ class Controller():
 
             # Schema info
             self.update_schema_info()
-
-
-
-
 
     def get_database_metadata(self, event):
         host = self.view.connection_panel.host.get()
