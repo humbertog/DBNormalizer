@@ -45,9 +45,6 @@ class Controller():
 
     def show_defaults(self):
         self.view.connection_panel.host.insert(0, self.model.host)
-        #TODO remember to change this
-        self.view.connection_panel.username.insert(0, 'humberto')
-        self.view.connection_panel.database.insert(0, 'dbnormalizer_test')
 
     def run(self):
         self.root.mainloop()
