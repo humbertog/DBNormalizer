@@ -90,3 +90,74 @@ def decompose_schema_pk(schema, over_attributes):
     else:
         new_schema = {}
     return new_schema
+
+
+"""
+Argument "table" should be an object of class table, argument
+"db" should be an instance of create_engine().
+autocommit parameter should be TRUE
+"""
+def Create_Table(table,db):
+    table.metadata.create(db)
+
+"""
+Following methods replicates method Create_Table() but output is directed onto a .sql file
+instead of database
+"""
+def Create_Table_File(table):
+    from sqlalchemy.schema import CreateTable
+    filename = table.name + ".sql"
+    f = open(filename,'w+')
+    f.write(CreateTable(table.metadata))
+    f.close()
+
+
+"""
+Arguments "main_table and subsume_of_main_tabletable" should be an object of class table,
+argument "db" should be an instance of create_engine(), "over_attributes" are the list of attributes
+that will be copied from main_table onto the subsume_of_main_tabletable.
+autocommit parameter should be TRUE
+"""
+def Copy_data(main_table,subsume_of_main_table,over_attributes,db):
+    query = "SELECT " + over_attributes + " FROM " + main_table.name
+    temp = db.execute(query)
+    for row in temp:
+        query = "INSERT INTO " + subsume_of_main_table.name + " VALUES(" + row +")"
+        db.execute(query)
+
+"""
+Following methods replicates method Copy_data() but output is directed onto a .sql file
+instead of database
+"""
+def Copy_data_file(main_table,subsume_of_main_table,over_attributes,db):
+    query = "SELECT " + over_attributes + " FROM " + main_table.name
+    temp = db.execute(query)
+    filename = subsume_of_main_table.name + ".sql"
+    f = open(filename,'a+')
+    for row in temp:
+        query = "INSERT INTO " + subsume_of_main_table.name + " VALUES(" + row +")"
+        f.write("\n")
+        f.write(query)
+    f.close()
+
+"""
+Argument "table" should be an object of class table, argument
+"db" should be an instance of create_engine().
+autocommit parameter should be TRUE
+"""
+def Drop_table(table,db):
+    query = "DROP TABLE IF EXISTS " +table.name
+    db.execute(query)
+
+
+"""
+Following methods replicates method Drop_table() but output is directed onto a .sql file
+instead of database
+"""
+def Drop_table_file(table):
+    query = "DROP TABLE IF EXISTS " +table.name
+    filename = table.name + ".sql"
+    f = open(filename,'a+')
+    f.write("\n")
+    f.write(query)
+    f.close()

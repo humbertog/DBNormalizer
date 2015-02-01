@@ -172,3 +172,16 @@ class Model():
         else:
             ret = rel.normalization.FDListBCNF
         return ret
+
+    def get_relation_db_schema_attributes(self, relation_name):
+        rel = self.get_relation(relation_name)
+        return rel.db_schema_attributes
+
+    def get_relation_db_schema_unique(self, relation_name):
+        rel = self.get_relation(relation_name)
+        return rel.db_schema_unique
+
+    def get_relation_db_schema_pk(self, relation_name):
+            rel = self.get_relation(relation_name)
+            return rel.db_schema_pk
+

@@ -75,6 +75,28 @@ class Controller():
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, "\nBCNF: \n")
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.insert(INSERT, str(bcnf))
 
+    def update_schema_info(self):
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.delete(1.0, END)
+
+        att_schema = self.model.get_relation_db_schema_attributes(self.current_relation)
+        unique_schema = self.model.get_relation_db_schema_unique(self.current_relation)
+        pk_schema = self.model.get_relation_db_schema_pk(self.current_relation)
+
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, 'ATTRIBUTES: \n')
+        for i in att_schema:
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(i))
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
+
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, "\nPK CONSTRAINTS: \n")
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(pk_schema))
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
+
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.\
+            text_box.insert(INSERT, "\nUNIQUE CONSTRAINTS: \n")
+        for i in unique_schema:
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(i))
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
+
     def add_relation(self, parent, relation, original=True):
         if original:
             val = ['relation', 'original', relation.name]
@@ -165,6 +187,9 @@ class Controller():
 
             # FDS violations:
             self.update_violations()
+
+            # Schema info
+            self.update_schema_info()
 
 
     def get_database_metadata(self, event):
