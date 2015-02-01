@@ -137,6 +137,7 @@ class FDS_tab1_buttons(Frame):
         Frame.__init__(self,parent)
         self.tab1_frame = ttk.Frame(self)
         self.tab1_frame.pack(side= BOTTOM)
+
         self.button_remove = ttk.Button(self.tab1_frame, text="Remove")
         self.button_remove.pack(side=LEFT)
         self.button_add = ttk.Button(self.tab1_frame, text="Add")

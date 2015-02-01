@@ -2,7 +2,6 @@ __author__ = 'humberto'
 
 from DBNormalizer.view.View import *
 from DBNormalizer.model.Model import *
-from DBNormalizer.view.AC_topWindow import *
 
 
 class Controller():
@@ -10,7 +9,7 @@ class Controller():
         self.model = Model()
 
         self.root = Tk()
-        self.root.geometry("1000x600+300+300")
+        self.root.geometry("1000x650+300+300")
         self.root.title("Super DB Normalizer")
         self.view = View(self.root)
 
@@ -24,6 +23,8 @@ class Controller():
         self.view.right_panel.frame_four_t.subFrame4.\
             buttons_frame.button_bcnf.bind("<Button>", self.compute_decomposed_relationsBCNF)
 
+        self.view.side_panel.tree_buttons.add_relation_button.bind("<Button>",self.add_user_relation)
+        self.view.side_panel.tree_buttons.add_attribute_button.bind("<Button>", self.add_user_attribute)
 
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
             button_remove.bind("<Button>", self.remove_fd)
@@ -42,11 +43,35 @@ class Controller():
     def show_defaults(self):
         self.view.connection_panel.host.insert(0, self.model.host)
         #TODO remember to change this
-        self.view.connection_panel.username.insert(0, 'Gabriela')
-        self.view.connection_panel.database.insert(0, 'Test')
+        self.view.connection_panel.username.insert(0, 'humberto')
+        self.view.connection_panel.database.insert(0, 'dbnormalizer_test')
 
     def run(self):
         self.root.mainloop()
+
+    def add_user_relation(self, event):
+        inputDialog_rel = MyDialog_Relation(self.root)
+
+        self.root.wait_window(inputDialog_rel.top)
+
+        print(inputDialog_rel.attr)
+        if inputDialog_rel.attr is not None:
+            name = inputDialog_rel.attr['attr']
+            if not self.model.add_user_relation(name):
+                self.view.side_panel.relation_tree.tree.insert('', "end", iid=name, text=name,
+                                                             value=['relation', 'original', name])
+
+    def add_user_attribute(self, event):
+        inputDialog_rel = MyDialog_Attribute(self.root)
+
+        self.root.wait_window(inputDialog_rel.top)
+
+        if inputDialog_rel.attr is not None:
+            name = self.current_relation
+            attr = inputDialog_rel.attr['attr']
+            if not self.model.add_user_relation_attribute(name, attr):
+                self.view.side_panel.relation_tree.tree.insert(name, "end", text=attr,
+                                                             value=['column', 'attr', attr])
 
     def add_fd(self, event):
         inputDialog = MyDialog(self.root)
@@ -54,6 +79,7 @@ class Controller():
 
         if inputDialog.fd is not None:
             self.model.add_fd(inputDialog.fd, self.current_relation)
+            self.update_right_panel(self.current_relation)
 
     def remove_fd(self, event):
         fd_idx = self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.curselection()
@@ -100,22 +126,25 @@ class Controller():
         unique_schema = self.model.get_relation_db_schema_unique(self.current_relation)
         pk_schema = self.model.get_relation_db_schema_pk(self.current_relation)
 
-        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, 'ATTRIBUTES: \n')
-        for i in att_schema:
-            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(i))
+        if att_schema is not None:
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, 'ATTRIBUTES: \n')
+            for i in att_schema:
+                self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(i))
+                self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
+
+        if pk_schema is not None:
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, "\nPK CONSTRAINTS: \n")
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(pk_schema))
             self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
 
-        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, "\nPK CONSTRAINTS: \n")
-        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(pk_schema))
-        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
+        if unique_schema is not None:
+            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.\
+                text_box.insert(INSERT, "\nUNIQUE CONSTRAINTS: \n")
+            for i in unique_schema:
+                self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(i))
+                self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
 
-        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.\
-            text_box.insert(INSERT, "\nUNIQUE CONSTRAINTS: \n")
-        for i in unique_schema:
-            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, str(i))
-            self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab4.text_box.insert(INSERT, '\n')
-
-    def add_relation(self, parent, relation, original=True):
+    def add_relation_tree(self, parent, relation, original=True):
         if original:
             val = ['relation', 'original', relation.name]
         else:
@@ -128,7 +157,7 @@ class Controller():
 
     def populate_from_relation_dict(self, parent, rel_dic):
         for rel in rel_dic.keys():
-            self.add_relation(parent, rel_dic[rel])
+            self.add_relation_tree(parent, rel_dic[rel])
 
     def delete_decomposition(self):
         original_names = self.model.get_original_relations_names()
@@ -159,7 +188,7 @@ class Controller():
             decomposition_names = self.model.get_decomposition_names(name)
             for dec_name in decomposition_names:
                 rel = self.model.get_relation(dec_name)
-                self.add_relation(name, rel, original=False)
+                self.add_relation_tree(name, rel, original=False)
 
     def clear_right_panel(self):
         #

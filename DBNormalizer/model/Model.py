@@ -192,3 +192,16 @@ class Model():
             rel = self.get_relation(relation_name)
             return rel.db_schema_pk
 
+    def add_user_relation(self, relation_name):
+        if relation_name not in self.original_relations_names:
+            self.original_relations_names.append(relation_name)
+            self.relations[relation_name] = Relation(relation_name)
+            return 0
+        else:
+            return 1
+
+
+    def add_user_relation_attribute(self, relation_name, attribute_name):
+        rel = self.get_relation(relation_name)
+        return rel.add_attributes(attribute_name)
+
