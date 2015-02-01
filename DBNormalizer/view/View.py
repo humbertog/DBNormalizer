@@ -1,4 +1,4 @@
-__author__ = 'humberto'
+__author__ = 'Nantes'
 
 from DBNormalizer.view.ConnectionPannel import *
 from DBNormalizer.view.SidePanel import *

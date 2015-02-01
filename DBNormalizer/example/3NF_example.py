@@ -1,4 +1,4 @@
-__author__ = 'mariaslanova','Bishnu','Harsha'
+__author__ = 'Paris'
 
 from DBNormalizer.model.Decomp import *
 

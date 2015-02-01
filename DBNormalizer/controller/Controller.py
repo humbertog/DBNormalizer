@@ -1,4 +1,4 @@
-__author__ = 'humberto'
+__author__ = 'Nantes'
 
 from DBNormalizer.view.View import *
 from DBNormalizer.model.Model import *
@@ -37,8 +37,11 @@ class Controller():
         self.view.right_panel.frame_three_t.attributeButton.button_attribute_closure.\
             bind("<Button>", self.get_attr_closure)
 
-        #
+        #DDL Statements
+        self.view.connection_panel.sql_output_button.bind("<Button>", self.compute_sql_statements)
+
         self.show_defaults()
+
 
     def show_defaults(self):
         self.view.connection_panel.host.insert(0, self.model.host)
@@ -188,6 +191,9 @@ class Controller():
             for dec_name in decomposition_names:
                 rel = self.model.get_relation(dec_name)
                 self.add_relation_tree(name, rel, original=False)
+
+    def compute_sql_statements(self,event):
+        self.model.compute_sql_statements()
 
     def clear_right_panel(self):
         #

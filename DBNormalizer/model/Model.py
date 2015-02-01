@@ -1,8 +1,9 @@
-__author__ = 'humberto'
+__author__ = 'Nantes'
 
 from DBNormalizer.model.Relation import Relation
 from DBNormalizer.model.SQLParser import get_table_partitions
 from sqlalchemy import *
+from sqlalchemy.schema import CreateTable
 from DBNormalizer.model.FDependencyList import *
 from DBNormalizer.model.Decomp import *
 
@@ -21,9 +22,10 @@ class Model():
         self.relations = {}
         self.original_relations_names = []
 
-        self.meta_new = None
+        #self.meta_new = MetaData()
         # A dictionary with lists, each with the names of its decomposed relations
         self.decomposition_match = {}
+
 
 
     def compute_normalization_proposal(self, decomp='3NF'):
@@ -62,11 +64,30 @@ class Model():
         self.decomposition_match = decomposition_dic
 
 
+
     def delete_BCNF_decomposition_proposal(self):
         for rel_name in self.decomposition_match.keys():
             dec_list = self.get_decomposition_names(rel_name)
             for dec in dec_list:
                 del self.relations[dec]
+
+    def compute_sql_statements(self):
+        meta_new = MetaData()
+        filename = "Queries.sql"
+        f = open(filename, 'w')
+        f.write('\n')
+        f.close()
+        keys =list(self.decomposition_match.keys())
+        f = open(filename,'a')
+        for relation in keys:
+            m = self.get_decomposition_names(relation)
+            for subrelation in m:
+                s = self.relations[subrelation].SQL_statement(meta_new)
+                l = CreateTable(s)
+                print(l)
+                f.write(str(l))
+        f.close()
+
 
 
     def set_db_connection_params(self, username, password, host, database, port):
@@ -87,7 +108,6 @@ class Model():
     def get_schema(self):
         db_schema = {}
         tables = self.insp.get_table_names()
-
         for name in tables:
             att = self.insp.get_columns(name)
             pk = self.insp.get_pk_constraint(name)

@@ -1,4 +1,4 @@
-__author__ = 'humberto'
+__author__ = 'Nantes'
 
 from tkinter import *
 from tkinter import ttk

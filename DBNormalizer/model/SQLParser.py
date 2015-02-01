@@ -1,4 +1,4 @@
-__author__ = 'Humberto, Gabriela'
+__author__ = 'Nantes-Paris'
 
 from sqlalchemy import *
 

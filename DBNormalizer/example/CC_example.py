@@ -1,4 +1,4 @@
-__author__ = 'mariaslanova'
+__author__ = 'Paris'
 
 from DBNormalizer.model.mincover import *
 from DBNormalizer.model.FDependencyList import *

@@ -1,4 +1,4 @@
-__author__ = 'mariaslanova'
+__author__ = 'Paris'
 # TODO Remove file as now this functions are part of FunctionalDependencyList
 from DBNormalizer.model.FDependencyList import *
 

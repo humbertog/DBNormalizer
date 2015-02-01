@@ -1,4 +1,4 @@
-__author__ = 'mariaslanova'
+__author__ = 'Paris'
 
 from DBNormalizer.example.relations import readDB_schema
 from DBNormalizer.model.SQLParser import *

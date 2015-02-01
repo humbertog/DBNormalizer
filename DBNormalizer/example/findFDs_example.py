@@ -1,4 +1,4 @@
-__author__ = 'Gabriela'
+__author__ = 'Nantes'
 
 from DBNormalizer.model.Relation import *
 

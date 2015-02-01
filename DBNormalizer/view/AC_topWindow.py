@@ -1,6 +1,5 @@
-__author__ = 'Gabriela'
+__author__ = 'Nantes'
 
-__author__ = 'humberto'
 
 from tkinter import *
 
