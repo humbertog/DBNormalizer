@@ -97,10 +97,13 @@ class Controller():
                 if item_values['values'][1] == 'decomposition':
                     self.view.side_panel.relation_tree.tree.delete(item)
 
-    def compute_decomposed_relations(self, event):
+    def compute_decomposed_relations(self, event, nf='BCNF'):
         self.delete_decomposition()
-        #self.model.compute_normalization_proposal_BCNF()
-        self.model.compute_normalization_proposal_3NF()
+        if nf == '3NF':
+            self.model.compute_normalization_proposal_3NF()
+        else:
+            self.model.compute_normalization_proposal_BCNF()
+        #
         print(self.model.relations)
         relation_names = self.model.get_original_relations_names()
         for name in relation_names:

@@ -46,6 +46,6 @@ for i in range(0,len(names)):
       #   if(N.checkBCNF(fd,lhs,rhs,allKeys)):
     #        print("BCNF violation")
 
-    L=D.proposal3NF(rltn,minFds,FDS)
+    L=D.proposal3NF(rltn, minFds, FDS)
     print('3NF - ',L)
     L.clear()

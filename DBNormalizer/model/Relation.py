@@ -54,6 +54,7 @@ class Relation:
         return get_schema_attribute_property(self.db_schema_attributes, att_property='default', attr_name=attr_name)
 
     def set_canonical_cover(self):
+
         self.canonical_cover = self.fds.MinimalCover()
 
     def set_candidate_keys(self):
@@ -84,6 +85,9 @@ class Relation:
                 self.NF = 'BCNF'
 
         else:
+            self.normalization.FDListBCNF = FDependencyList()
+            self.normalization.FDList3NF = FDependencyList()
+            self.normalization.FDList2NF = FDependencyList()
             self.NF = 'NoFDs'
 
     def fds_add(self, fd):
@@ -108,8 +112,8 @@ class Relation:
             if fds_in_rel[rhs]:
                 for lhs in fds_in_rel[rhs]:
                     fds.append(FDependency(lhs, [rhs]))
-        #self.fds = fds.MinimalCover()
-        self.fds = fds
+        self.fds = fds.MinimalCover()
+        #self.fds = fds
 
     def SQL_statement(self, metadata):
         """

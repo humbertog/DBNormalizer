@@ -75,9 +75,16 @@ class Model():
                 dec_relation_list.append(sub_name)
                 new_attr = list(tup[0])
                 new_fds = FDependencyList(tup[1])
+                print("==========================================")
+                print(new_fds)
+                print("=========")
+                print(new_attr)
                 new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+
                 new_relation.set_canonical_cover()
+
                 new_relation.set_candidate_keys()
+
                 new_relation.set_normalization()
 
                 self.relations[sub_name] = new_relation

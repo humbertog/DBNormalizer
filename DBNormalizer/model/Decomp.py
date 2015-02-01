@@ -15,12 +15,14 @@ class Decomposition:
         for fd in MinFDs:
             R1=self.createNewRelation(fd)
             #self.List_Relation.append(R1)
-            self.addRelation(R1)
+            F0=self.projectFDs(R,R1,MinFDs)
+            self.addRelation(R1,F0)
+
 
         if not self.candidateKeyChecking(R,MinFDs,FDs):
             KRs=self.createKeyRelation(R,MinFDs,FDs)
-
-            self.List_Relation.append(KRs[0])
+            Fkey=self.projectFDs(R,KRs[0],MinFDs)
+            self.List_Relation.append((KRs[0],Fkey))
 
 
         return self.List_Relation
@@ -90,28 +92,27 @@ class Decomposition:
 
 
 
-    def addRelation(self,R1):
+    def addRelation(self,R1,F):
 
         """ This method will check if any of the currently
             added relation is a subset of New Relation """
         #check=False;
         T=self.List_Relation.copy()
         if self.List_Relation==[]:
-            self.List_Relation.append(R1)
+            self.List_Relation.append((R1,F))
         else:
             for g in T:
-                if(g.issubset(R1)):
+                if(g[0].issubset(R1)):
                     self.List_Relation.remove(g)
-                    #self.List_Relation.append(R1)
+                #self.List_Relation.append(R1)
                 else:
-                    if R1.issubset(g):
-                        #self.List_Relation.remove(R1)
+                    if R1.issubset(g[0]):
+                #self.List_Relation.remove(R1)
                         return 0
-
-
-            self.List_Relation.append(R1)
+            self.List_Relation.append((R1,F))
 
         return 0
+
     def createNewRelation(self,nfd):
 
         g=list()
@@ -130,7 +131,7 @@ class Decomposition:
         keys=N.findCandKeys(R,MinFDs,FDs)
         for R2 in self.List_Relation:
             for key in keys:
-                if  key.issubset(R2):
+                if key.issubset(R2[0]):
                     flag=True
                     return True
                 else:

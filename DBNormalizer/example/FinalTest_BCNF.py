@@ -47,8 +47,10 @@ for i in range(0,len(names)):
     #        print("BCNF violation")
 
     L=D.proposalBCNF(rltn,minFds)
-    for l in L:
-       print(l[0])
-       print(l[1])
-       print("\n")
-    L.clear()
+    # for l in L:
+    #    print(l[0])
+    #    print(l[1])
+    #    print("\n")
+    # #L.clear()
+
+print(L)
