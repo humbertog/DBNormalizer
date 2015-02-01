@@ -2,6 +2,7 @@ __author__ = 'humberto'
 
 from DBNormalizer.view.View import *
 from DBNormalizer.model.Model import *
+from DBNormalizer.view.AC_topWindow import *
 
 
 class Controller():
@@ -27,14 +28,24 @@ class Controller():
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
             button_add.bind("<Button>", self.add_fd)
 
+        # Attribute Closure button
+        self.view.right_panel.frame_three_t.attributeButton.button_attribute_closure.\
+            bind("<Button>", self.get_attr_closure)
+
+
+        # Attribute Closure
+
+
         #
         self.show_defaults()
+
+
 
     def show_defaults(self):
         self.view.connection_panel.host.insert(0, self.model.host)
         #TODO remember to change this
-        self.view.connection_panel.username.insert(0, 'humberto')
-        self.view.connection_panel.database.insert(0, 'dbnormalizer_test')
+        self.view.connection_panel.username.insert(0, 'Gabriela')
+        self.view.connection_panel.database.insert(0, 'Test')
 
     def run(self):
         self.root.mainloop()
@@ -42,7 +53,7 @@ class Controller():
     def add_fd(self, event):
         inputDialog = MyDialog(self.root)
         self.root.wait_window(inputDialog.top)
-        print(inputDialog)
+  #      print(inputDialog)
         if inputDialog.fd is not None:
             self.model.add_fd(inputDialog.fd, self.current_relation)
 
@@ -58,6 +69,18 @@ class Controller():
         name = self.current_relation
         self.model.update_relation(name)
         self.update_right_panel(name)
+
+    def get_attr_closure(self, event):
+        inputDialog2 = MyDialog_AC(self.root)
+        print(inputDialog2.attr)
+        self.root.wait_window(inputDialog2.top)
+ #       print(inputDialog2)
+        if inputDialog2.attr is not None:
+            self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.delete(0,END)
+            closure = self.model.get_attr_closure(inputDialog2.attr, self.current_relation)
+            print(closure)
+            for attribute in closure:
+                self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.insert(END,attribute)
 
     def update_violations(self):
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab3.text_box.delete(1.0, END)
@@ -127,6 +150,15 @@ class Controller():
             self.current_relation = name
             self.update_right_panel(name)
 
+
+    # def update_attribute_closure(self, attr, name):
+    #    # self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.set()
+    #    # self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.delete(0,END)
+    #     closure = self.model.get_attr_closure(self.inputDialog2.attr, self.name)
+    #     if len(closure) != 0:
+    #         for a in closure:
+    #             self.view.right_panel.frame_three_t.subFrame3_2.attr_closure_list.insert(END, a)
+
     def update_right_panel(self, name):
             self.clear_right_panel()
             self.view.right_panel.frame_one_t.subFrame1.var_name.set(name)
@@ -157,6 +189,9 @@ class Controller():
 
             # FDS violations:
             self.update_violations()
+
+
+
 
 
     def get_database_metadata(self, event):

@@ -196,6 +196,13 @@ class Model():
         fd = FDependency(lhs_format, rhs_format)
         rel.fds_add(fd)
 
+    def get_attr_closure(self, attr_dic, relation_name):
+        rel = self.get_relation(relation_name)
+        attributes = attr_dic['attr'].split(",")
+        attributes_format = [x.strip() for x in attributes]
+        closure = rel.fds.attribute_closure(attributes_format)
+        return closure
+
     def get_violation(self, relation_name, nf='2NF'):
         rel = self.get_relation(relation_name)
         if nf == '2NF':
