@@ -148,3 +148,11 @@ class Model():
         removed = rel.fds.remove_fd_idx(idx)
         return removed
 
+    def add_fd(self, fd_dic, relation_name):
+        rel = self.get_relation(relation_name)
+        lhs = fd_dic['lhs'].split(",")
+        lhs_format = [x.strip() for x in lhs]
+        rhs = fd_dic['rhs'].split(",")
+        rhs_format = [x.strip() for x in rhs]
+        fd = FDependency(lhs_format, rhs_format)
+        rel.fds_add(fd)

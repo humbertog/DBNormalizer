@@ -234,5 +234,3 @@ class ButtonsFrame(Frame):
         self.button_normalization.pack(side=LEFT)
         self.button_attribute = ttk.Button(self, text="Show Attribute Closure")
         self.button_attribute.pack(side=LEFT)
-
-

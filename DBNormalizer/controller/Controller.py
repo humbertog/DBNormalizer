@@ -24,6 +24,8 @@ class Controller():
                                                                                                        self.remove_fd)
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
             button_save.bind("<Button>", self.save_relation)
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
+            button_add.bind("<Button>", self.add_fd)
 
         #
         self.show_defaults()
@@ -36,6 +38,13 @@ class Controller():
 
     def run(self):
         self.root.mainloop()
+
+    def add_fd(self, event):
+        inputDialog = MyDialog(self.root)
+        self.root.wait_window(inputDialog.top)
+        print(inputDialog)
+        if inputDialog.fd is not None:
+            self.model.add_fd(inputDialog.fd, self.current_relation)
 
     def remove_fd(self, event):
         fd_idx = self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.curselection()

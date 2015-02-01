@@ -88,6 +88,7 @@ class Relation:
             self.fds.extend(fd)
         if type(fd) is FDependency:
             self.fds.append(fd)
+        print(self)
 
     def fds_remove(self, fd):
         if type(fd) is FDependency:
