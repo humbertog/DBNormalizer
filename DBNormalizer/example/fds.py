@@ -12,7 +12,7 @@ fd3 = FDependency(['C', 'D'], ['E'])
 fds = FDependencyList([fd2, fd3])
 fds.append(fd1)  # This class inherits from list so you can use any list method!
 #print(fds)
-print("fucking FDs",fds)
+
 # Computes the attribute closure of AB with the FDs contained
 # in fds
 closure = fds.attribute_closure(['A', 'B'])

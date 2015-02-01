@@ -160,6 +160,10 @@ class Controller():
             for dec_name in decomposition_names:
                 rel = self.model.get_relation(dec_name)
                 self.add_relation(name, rel, original=False)
+        self.compute_sql_statements()
+
+    def compute_sql_statements(self):
+        self.model.compute_sql_statements()
 
     def clear_right_panel(self):
         #
