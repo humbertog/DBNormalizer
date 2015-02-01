@@ -105,7 +105,7 @@ class FDS_notebook(Frame):
         self.tab2 = FDS_tab2(None)
         self.n.add(self.tab2, text='Minimal Cover', sticky=N+E+S+W)
         self.tab3=FDS_tab3(None)
-        self.n.add(self.tab3, text='Normal Form Violations', sticky=N+E+S+W)
+        self.n.add(self.tab3, text='NF Violations', sticky=N+E+S+W)
         self.tab4=FDS_tab4(None)
         self.n.add(self.tab4, text='Table Information', sticky=N+E+S+W)
         #self.n.grid(sticky=N)
@@ -181,9 +181,12 @@ class FDS_tab4(Frame):
         Frame.__init__(self,parent)
         #self.pack(anchor=N, expand=1, fill=BOTH)
 
-        self.table_label = Table_info_label(self)
-        self.table_label.pack(fill=BOTH,side=TOP)
-        self.table_label.grid(column=1, row=3)
+        self.text_box = Text(self, height=10)
+        self.text_box.pack(expand=1, fill=BOTH)
+
+        ysb = ttk.Scrollbar(self.text_box, orient=VERTICAL, command=self.text_box.yview)
+        self.text_box['yscroll'] = ysb.set
+        ysb.pack(side=RIGHT, fill=Y)
 
 
 class Table_info_label(Frame):
@@ -273,7 +276,7 @@ class subFrame4(Frame):
 class ButtonsFrame(Frame):
     def __init__(self, parent):
         Frame.__init__(self,parent)
-        self.button_normalization = ttk.Button(self, text="Normalization Proposal")
+        self.button_normalization = ttk.Button(self, text="3NF Normalization")
         self.button_normalization.pack(side=LEFT)
-        self.button_attribute = ttk.Button(self, text="Show Attribute Closure")
-        self.button_attribute.pack(side=LEFT)
+        self.button_bcnf = ttk.Button(self, text="BCNF Normalization")
+        self.button_bcnf.pack(side=LEFT)

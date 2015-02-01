@@ -23,22 +23,27 @@ class Model():
 
         self.meta_new = None
         # A dictionary with lists, each with the names of its decomposed relations
-        self.decomposition_BCNF_match = {}
+        self.decomposition_match = {}
 
 
-    def compute_normalization_proposal_BCNF(self):
+    def compute_normalization_proposal(self, decomp='3NF'):
         self.delete_BCNF_decomposition_proposal()
-        dec = Decomposition()
         decomposition_dic = {}
         for name in self.original_relations_names:
+            dec = Decomposition()
             rel = self.relations[name]
             attr = rel.attributes
             canonical_cover = rel.canonical_cover
             # Decomposition proposal:
-            dec_proposal = dec.proposalBCNF(set(attr), canonical_cover)
+            if decomp == '3NF':
+                dec_proposal = dec.proposal3NF(set(attr), canonical_cover, (rel.fds))
+            else:
+                dec_proposal = dec.proposalBCNF(set(attr), canonical_cover)
+
             # Saves the decomposition in a dictionary:
             dec_relation_list = []
             i = 1
+
             for tup in dec_proposal:
                 sub_name = name + '_' + str(i)
                 dec_relation_list.append(sub_name)
@@ -48,55 +53,17 @@ class Model():
                 new_relation.set_canonical_cover()
                 new_relation.set_candidate_keys()
                 new_relation.set_normalization()
-
                 self.relations[sub_name] = new_relation
+
                 i += 1
 
             decomposition_dic[name] = dec_relation_list
 
-        self.decomposition_BCNF_match = decomposition_dic
-
-
-    def compute_normalization_proposal_3NF(self):
-        self.delete_BCNF_decomposition_proposal()
-        dec = Decomposition()
-        decomposition_dic = {}
-        for name in self.original_relations_names:
-            rel = self.relations[name]
-            attr = rel.attributes
-            canonical_cover = rel.canonical_cover
-            # Decomposition proposal:
-            dec_proposal = dec.proposal3NF(set(attr), canonical_cover, (rel.fds))
-            # Saves the decomposition in a dictionary:
-            dec_relation_list = []
-            i = 1
-            for tup in dec_proposal:
-                sub_name = name + '_' + str(i)
-                dec_relation_list.append(sub_name)
-                new_attr = list(tup[0])
-                new_fds = FDependencyList(tup[1])
-                print("==========================================")
-                print(new_fds)
-                print("=========")
-                print(new_attr)
-                new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
-
-                new_relation.set_canonical_cover()
-
-                new_relation.set_candidate_keys()
-
-                new_relation.set_normalization()
-
-                self.relations[sub_name] = new_relation
-                i += 1
-
-            decomposition_dic[name] = dec_relation_list
-
-        self.decomposition_BCNF_match = decomposition_dic
+        self.decomposition_match = decomposition_dic
 
 
     def delete_BCNF_decomposition_proposal(self):
-        for rel_name in self.decomposition_BCNF_match.keys():
+        for rel_name in self.decomposition_match.keys():
             dec_list = self.get_decomposition_names(rel_name)
             for dec in dec_list:
                 del self.relations[dec]
@@ -162,11 +129,11 @@ class Model():
         return self.relations[relation_name].fds
 
     def get_decomposition_names(self, relation_name):
-        return self.decomposition_BCNF_match[relation_name]
+        return self.decomposition_match[relation_name]
 
     def get_decomposition_names_all(self):
         l = []
-        for i in self.decomposition_BCNF_match:
+        for i in self.decomposition_match:
             l.append(i)
         return l
 
@@ -212,3 +179,16 @@ class Model():
         else:
             ret = rel.normalization.FDListBCNF
         return ret
+
+    def get_relation_db_schema_attributes(self, relation_name):
+        rel = self.get_relation(relation_name)
+        return rel.db_schema_attributes
+
+    def get_relation_db_schema_unique(self, relation_name):
+        rel = self.get_relation(relation_name)
+        return rel.db_schema_unique
+
+    def get_relation_db_schema_pk(self, relation_name):
+            rel = self.get_relation(relation_name)
+            return rel.db_schema_pk
+
