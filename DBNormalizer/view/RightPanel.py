@@ -197,16 +197,22 @@ class Table_info_label(Frame):
 
 class frame_three(Frame):
     def __init__(self,parent):
-        LabelFrame.__init__(self,parent, text="Candidate Keys")
+        LabelFrame.__init__(self,parent, text="Candidate Keys and attribute closure")
         #self.pack(anchor=N, expand=1, fill=BOTH)
 
         self.subFrame3 = subFrame3(self)
-        self.subFrame3.pack(anchor=NW, expand=1, fill=X)
+        self.subFrame3.pack(side=LEFT, expand=1, fill=X)
+
+        self.subFrame3_2 = subFrame3_2(self)
+        self.subFrame3_2.pack(side=LEFT, expand=1, fill=X)
+
+        self.attributeButton = attribute_closure_button(self)
+        self.attributeButton.pack(side=LEFT, expand=1,fill=X)
 
 
 class subFrame3(Frame):
     def __init__(self,parent):
-        Frame.__init__(self, parent)
+        LabelFrame.__init__(self, parent, text="Candidate Keys")
         #self.pack(anchor=NW, expand=1, fill=BOTH)
         # table_name = StringVar()
         # table_name_entry = ttk.Entry(self, width=7, textvariable=table_name)
@@ -222,6 +228,28 @@ class subFrame3(Frame):
         ysb.grid(in_=self, row=0, column=1, sticky=NS)
         xsb.grid(in_=self, row=1, column=0, sticky=EW)
         #self.keys_list.pack(anchor=NW, fill=X)
+
+
+class subFrame3_2(Frame):
+    def __init__(self,parent):
+        LabelFrame.__init__(self,parent, text="Attribute Closure")
+        self.attr_closure_list = Listbox(self, height=7)
+
+        ysb = ttk.Scrollbar(orient=VERTICAL, command=self.attr_closure_list.yview)
+        xsb = ttk.Scrollbar(orient=HORIZONTAL, command=self.attr_closure_list.xview)
+        self.attr_closure_list['yscroll'] = ysb.set
+        self.attr_closure_list['xscroll'] = xsb.set
+        self.attr_closure_list.grid(in_=self, row=0, column=0, sticky=NSEW)
+        ysb.grid(in_=self, row=0, column=1, sticky=NS)
+        xsb.grid(in_=self, row=1, column=0, sticky=EW)
+
+
+class attribute_closure_button(Frame):
+       def __init__(self,parent):
+        Frame.__init__(self,parent)
+
+        self.button_attribute_closure = ttk.Button(self, text="Attribute Closure")
+        self.button_attribute_closure.pack(side=LEFT)
 
 
 class frame_four(Frame):
