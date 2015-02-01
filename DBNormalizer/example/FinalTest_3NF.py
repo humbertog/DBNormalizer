@@ -7,7 +7,7 @@ from DBNormalizer.model.Decomp import *
 N=Normalization()
 D=Decomposition()
 
-db = create_engine('postgresql://Gabriela:@localhost/Test')
+db = create_engine('postgresql://humberto:@localhost/dbnormalizer_test')
 insp = inspect(db)
 meta = MetaData()
 meta.reflect(bind=db)
@@ -46,6 +46,6 @@ for i in range(0,len(names)):
       #   if(N.checkBCNF(fd,lhs,rhs,allKeys)):
     #        print("BCNF violation")
 
-    L=D.proposal3NF(rltn,minFds,FDS)
+    L=D.proposal3NF(rltn, minFds, FDS)
     print('3NF - ',L)
     L.clear()

@@ -3,6 +3,7 @@ __author__ = 'humberto'
 from DBNormalizer.view.ConnectionPannel import *
 from DBNormalizer.view.SidePanel import *
 from DBNormalizer.view.RightPanel import *
+from DBNormalizer.view.FD_topWindow import *
 
 class View():
     def __init__(self, parent):

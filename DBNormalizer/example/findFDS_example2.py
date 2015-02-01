@@ -2,6 +2,8 @@ __author__ = 'Nantes'
 
 from DBNormalizer.example.relations import readDB_schema
 from DBNormalizer.model.SQLParser import *
+from DBNormalizer.model.Decomp import *
+from DBNormalizer.model.Relation import *
 
 
 #postgresql://user:password@localhost/mydatabase
@@ -22,7 +24,7 @@ for i in range(0,len(names)):
 
 print(relations_list)
 
-print("=======================")
+
 # Lets try to compute NF:
 for nam in names:
     relations_list[nam].set_canonical_cover()
@@ -31,3 +33,32 @@ for nam in names:
     print("----------------------------")
     print(relations_list[nam])
 
+print("=======================")
+
+dec = Decomposition()
+decomposition_dic = {}
+for name in relations_list.keys():
+    rel = relations_list[name]
+    attr = rel.attributes
+    canonical_cover = rel.canonical_cover
+
+    # Decomposition proposal:
+    dec_proposal = dec.proposalBCNF(set(attr), canonical_cover)
+    # Saves the decomposition in a dictionary:
+    decomposition_dic[name] = {}
+    i = 1
+    for tup in dec_proposal:
+        sub_name = name + '_' + str(i)
+        new_attr = list(tup[0])
+        new_fds = FDependencyList(tup[1])
+        new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+        new_relation.set_canonical_cover()
+        new_relation.set_candidate_keys()
+        new_relation.set_normalization()
+        decomposition_dic[name][sub_name] = new_relation
+        i += 1
+
+
+print(relations_list[name])
+print(decomposition_dic['employee_project']['employee_project_1'])
+print(decomposition_dic['employee_project']['employee_project_2'])

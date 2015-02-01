@@ -18,8 +18,8 @@ class Relation:
         # Normalization
         self.normalization = Normalization()
         self.NF = None
-        self.candidate_keys = None
-        self.canonical_cover = FDependencyList
+        self.candidate_keys = []
+        self.canonical_cover = FDependencyList()
 
         self.db_schema_attributes = schema_attributes
         self.db_schema_pk = schema_keys
@@ -54,14 +54,20 @@ class Relation:
         return get_schema_attribute_property(self.db_schema_attributes, att_property='default', attr_name=attr_name)
 
     def set_canonical_cover(self):
+
         self.canonical_cover = self.fds.MinimalCover()
 
     def set_candidate_keys(self):
         if len(self.canonical_cover) != 0:
             self.candidate_keys = self.normalization.findCandKeys(set(self.attributes), self.canonical_cover, self.fds)
+        else:
+            self.candidate_keys = [set(self.attributes)]
 
     def set_normalization(self):
-        if len(self.canonical_cover) != 0 and self.candidate_keys is not None:
+        if len(self.canonical_cover) != 0:
+            self.normalization.FDListBCNF = FDependencyList()
+            self.normalization.FDList3NF = FDependencyList()
+            self.normalization.FDList2NF = FDependencyList()
             for fd in self.canonical_cover:
                 lhs=set(fd.lh)
                 rhs=set(fd.rh)
@@ -69,20 +75,27 @@ class Relation:
                 self.normalization.check3NF(fd, lhs, rhs, self.candidate_keys)
                 self.normalization.checkBCNF(fd, lhs, rhs, self.candidate_keys)
 
-        if len(self.normalization.FDList2NF) != 0:
-            self.NF = '1NF'
-        elif len(self.normalization.FDList3NF) != 0:
-            self.NF = '2NF'
-        elif len(self.normalization.FDListBCNF) != 0:
-            self.NF = '3NF'
+            if len(self.normalization.FDList2NF) != 0:
+                self.NF = '1NF'
+            elif len(self.normalization.FDList3NF) != 0:
+                self.NF = '2NF'
+            elif len(self.normalization.FDListBCNF) != 0:
+                self.NF = '3NF'
+            else:
+                self.NF = 'BCNF'
+
         else:
-            self.NF = 'BCNF'
+            self.normalization.FDListBCNF = FDependencyList()
+            self.normalization.FDList3NF = FDependencyList()
+            self.normalization.FDList2NF = FDependencyList()
+            self.NF = 'NoFDs'
 
     def fds_add(self, fd):
         if type(fd) is FDependencyList:
             self.fds.extend(fd)
         if type(fd) is FDependency:
             self.fds.append(fd)
+        print(self)
 
     def fds_remove(self, fd):
         if type(fd) is FDependency:
@@ -100,6 +113,7 @@ class Relation:
                 for lhs in fds_in_rel[rhs]:
                     fds.append(FDependency(lhs, [rhs]))
         self.fds = fds.MinimalCover()
+        #self.fds = fds
 
     def SQL_statement(self, metadata):
         """
@@ -115,7 +129,7 @@ class Relation:
         return parse_table(name, metadata, column_schema_list=column_schema, pk_schema=pk_schema,
                            unique_schema=unique_schema)
 
-    def sub_relation(self, name, over_attributes):
+    def sub_relation(self, name, over_attributes, fds=None):
         """
         Returns a sub-relation over the attributes specified. The pk and unique constraints are dropped if
         they are not defined completely in the sub-relation. If the schema_attributes, schema_pk and schema_unique
@@ -130,9 +144,8 @@ class Relation:
 
         new_relation = Relation(name, schema_attributes=new_schema_attr, schema_keys=new_schema_pk,
                                 schema_unique=new_schema_unique)
-
-        # Here is missing the code to determine which FDs still hold in the sub relation
-        # Once we have the Fds left in the sub-relation we can compute the candidate keys and normal forms.
+        if fds is not None:
+            new_relation.fds_add(fds)
 
         return new_relation
 

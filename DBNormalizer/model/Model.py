@@ -3,6 +3,8 @@ __author__ = 'humberto'
 from DBNormalizer.model.Relation import Relation
 from DBNormalizer.model.SQLParser import get_table_partitions
 from sqlalchemy import *
+from DBNormalizer.model.FDependencyList import *
+from DBNormalizer.model.Decomp import *
 
 
 class Model():
@@ -16,9 +18,89 @@ class Model():
 
         self.insp = None
         self.meta_original = MetaData()
-        self.relations_original = None
+        self.relations = {}
+        self.original_relations_names = []
+
         self.meta_new = None
-        self.new_relations = None
+        # A dictionary with lists, each with the names of its decomposed relations
+        self.decomposition_BCNF_match = {}
+
+
+    def compute_normalization_proposal_BCNF(self):
+        self.delete_BCNF_decomposition_proposal()
+        dec = Decomposition()
+        decomposition_dic = {}
+        for name in self.original_relations_names:
+            rel = self.relations[name]
+            attr = rel.attributes
+            canonical_cover = rel.canonical_cover
+            # Decomposition proposal:
+            dec_proposal = dec.proposalBCNF(set(attr), canonical_cover)
+            # Saves the decomposition in a dictionary:
+            dec_relation_list = []
+            i = 1
+            for tup in dec_proposal:
+                sub_name = name + '_' + str(i)
+                dec_relation_list.append(sub_name)
+                new_attr = list(tup[0])
+                new_fds = FDependencyList(tup[1])
+                new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+                new_relation.set_canonical_cover()
+                new_relation.set_candidate_keys()
+                new_relation.set_normalization()
+
+                self.relations[sub_name] = new_relation
+                i += 1
+
+            decomposition_dic[name] = dec_relation_list
+
+        self.decomposition_BCNF_match = decomposition_dic
+
+
+    def compute_normalization_proposal_3NF(self):
+        self.delete_BCNF_decomposition_proposal()
+        dec = Decomposition()
+        decomposition_dic = {}
+        for name in self.original_relations_names:
+            rel = self.relations[name]
+            attr = rel.attributes
+            canonical_cover = rel.canonical_cover
+            # Decomposition proposal:
+            dec_proposal = dec.proposal3NF(set(attr), canonical_cover, (rel.fds))
+            # Saves the decomposition in a dictionary:
+            dec_relation_list = []
+            i = 1
+            for tup in dec_proposal:
+                sub_name = name + '_' + str(i)
+                dec_relation_list.append(sub_name)
+                new_attr = list(tup[0])
+                new_fds = FDependencyList(tup[1])
+                print("==========================================")
+                print(new_fds)
+                print("=========")
+                print(new_attr)
+                new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+
+                new_relation.set_canonical_cover()
+
+                new_relation.set_candidate_keys()
+
+                new_relation.set_normalization()
+
+                self.relations[sub_name] = new_relation
+                i += 1
+
+            decomposition_dic[name] = dec_relation_list
+
+        self.decomposition_BCNF_match = decomposition_dic
+
+
+    def delete_BCNF_decomposition_proposal(self):
+        for rel_name in self.decomposition_BCNF_match.keys():
+            dec_list = self.get_decomposition_names(rel_name)
+            for dec in dec_list:
+                del self.relations[dec]
+
 
     def set_db_connection_params(self, username, password, host, database, port):
         self.username = username
@@ -38,6 +120,7 @@ class Model():
     def get_schema(self):
         db_schema = {}
         tables = self.insp.get_table_names()
+
         for name in tables:
             att = self.insp.get_columns(name)
             pk = self.insp.get_pk_constraint(name)
@@ -45,6 +128,7 @@ class Model():
             rel = Relation(name, schema_attributes=att, schema_keys=pk, schema_unique=unique)
             db_schema[name] = rel
 
+        self.original_relations_names = tables
         self.relations = db_schema
 
     def append_fds(self):
@@ -53,4 +137,71 @@ class Model():
             nam = names[i]
             partitions_dict = get_table_partitions(nam, self.relations[nam].attributes, self.engine)
             self.relations[nam].find_fds(partitions_dict)
+
+            # Compute the canicalcover, candidate keys and normal form
+            self.relations[nam].set_canonical_cover()
+            self.relations[nam].set_candidate_keys()
+            self.relations[nam].set_normalization()
             #print(self.relations[nam])
+
+    def update_relation(self, relation_name):
+        self.relations[relation_name].set_canonical_cover()
+        self.relations[relation_name].set_candidate_keys()
+        self.relations[relation_name].set_normalization()
+
+    def get_NF(self, relation_name):
+        return self.relations[relation_name].NF
+
+    def get_candidate_keys(self, relation_name):
+        return self.relations[relation_name].candidate_keys
+
+    def get_canonical_cover(self, relation_name):
+        return self.relations[relation_name].canonical_cover
+
+    def get_fds(self,relation_name):
+        return self.relations[relation_name].fds
+
+    def get_decomposition_names(self, relation_name):
+        return self.decomposition_BCNF_match[relation_name]
+
+    def get_decomposition_names_all(self):
+        l = []
+        for i in self.decomposition_BCNF_match:
+            l.append(i)
+        return l
+
+    def get_original_relations_names(self):
+        return self.original_relations_names
+
+    def get_relation_names(self):
+        return self.relations.keys()
+
+    def get_relation(self, relation_name):
+        return self.relations[relation_name]
+
+    def get_relation_attributes(self, relation_name):
+        return self.relations[relation_name].attributes
+
+    def remove_fd_idx(self, relation_name, idx):
+        rel = self.get_relation(relation_name)
+        removed = rel.fds.remove_fd_idx(idx)
+        return removed
+
+    def add_fd(self, fd_dic, relation_name):
+        rel = self.get_relation(relation_name)
+        lhs = fd_dic['lhs'].split(",")
+        lhs_format = [x.strip() for x in lhs]
+        rhs = fd_dic['rhs'].split(",")
+        rhs_format = [x.strip() for x in rhs]
+        fd = FDependency(lhs_format, rhs_format)
+        rel.fds_add(fd)
+
+    def get_violation(self, relation_name, nf='2NF'):
+        rel = self.get_relation(relation_name)
+        if nf == '2NF':
+            ret = rel.normalization.FDList2NF
+        elif nf == '3NF':
+            ret = rel.normalization.FDList3NF
+        else:
+            ret = rel.normalization.FDListBCNF
+        return ret

@@ -1,20 +1,26 @@
-__author__ = 'mariaslanova'
+__author__ = 'Paris'
 
 from DBNormalizer.example.relations import readDB_schema
 from DBNormalizer.model.SQLParser import *
 from DBNormalizer.model.Decomp import *
+from DBNormalizer.model.XMLIO import *
+
+'''
+The correct path to folder should be specified for exPath
+'''
+exPath="/Users/mariaslanova/PycharmProjects/DBNormalizer/DBNormalizer/DBNormalizer/XML/XML_export/"
 
 N=Normalization()
 D=Decomposition()
-
-db = create_engine('postgresql://humberto:@localhost/dbnormalizer_test')
+Xml=XmlParsing()
+db = create_engine('postgresql://mariaslanova:@localhost/Test1')
 insp = inspect(db)
 meta = MetaData()
 meta.reflect(bind=db)
 
 relations_list = readDB_schema(insp)
 names = list(relations_list.keys())
-
+tabNo=0
 for i in range(0,len(names)):
     nam = names[i]
     #print(nam)
@@ -47,10 +53,17 @@ for i in range(0,len(names)):
     #        print("BCNF violation")
 
     L=D.proposalBCNF(rltn,minFds)
-    # for l in L:
-    #    print(l[0])
-    #    print(l[1])
-    #    print("\n")
-    # #L.clear()
+    for l in L:
+        tabName="table"+str(tabNo)
+        S=list();
+        for s in l[1]:
+            S.append((s.lh,s.rh))
+        Xml.writeTableToXML(tabName,list(l[0]),S,"Decomposition",exPath)
+        S.clear()
+        tabNo=tabNo+1
 
-print(L)
+
+    L.clear()
+
+
+

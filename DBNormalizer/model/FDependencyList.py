@@ -20,6 +20,10 @@ class FDependencyList(list):
                 string = string + ', ' + self[i].__str__()
         return string
 
+    def remove_fd_idx(self, idx):
+        removed = self.pop(idx)
+        return removed
+
     def attribute_closure(self, attributes):
         """
         Computes the attribute closure with respect to the functional dependencies in the list
@@ -42,6 +46,8 @@ class FDependencyList(list):
 
 
     def MinimalCover(self):
+        if self==[]:
+            return []
         return self.makeRightsingleton().removeExtraneous().removeDuplicacy()
 
     def get_lhs(self):
