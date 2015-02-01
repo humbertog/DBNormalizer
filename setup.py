@@ -38,7 +38,6 @@ setup(
     name='DBNormalizer',
     version=DBNormalizer.__version__,
     url='http://github.com/humbertog/DBNormalizer/',
-    license='Apache Software License',
     author=['Gabriela', 'Maria', 'Humberto', 'Harsha', 'Bishnu'],
     tests_require=['pytest'],
     install_requires=[ 'SQLalchemy>=0.8.2'],
@@ -52,11 +51,7 @@ setup(
     test_suite='',
     classifiers = [
         'Programming Language :: Python',
-        'Development Status :: 1 - Beta',
-        'Natural Language :: English',
-        'Environment :: Web Environment',
-        'License :: OSI Approved :: Apache Software License',
-        'Operating System :: OS Independent'
+        'Development Status :: 1 - Beta''
         ],
     extras_require={
         'testing': ['pytest'],
