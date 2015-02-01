@@ -245,7 +245,7 @@ class subFrame4(Frame):
 class ButtonsFrame(Frame):
     def __init__(self, parent):
         Frame.__init__(self,parent)
-        self.button_normalization = ttk.Button(self, text="Normalization Proposal")
+        self.button_normalization = ttk.Button(self, text="3NF Normalization")
         self.button_normalization.pack(side=LEFT)
-        self.button_attribute = ttk.Button(self, text="Show Attribute Closure")
-        self.button_attribute.pack(side=LEFT)
+        self.button_bcnf = ttk.Button(self, text="BCNF Normalization")
+        self.button_bcnf.pack(side=LEFT)

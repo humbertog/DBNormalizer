@@ -19,9 +19,13 @@ class Controller():
         self.view.side_panel.relation_tree.tree.bind("<Double-1>", self.select_relation)
         self.view.connection_panel.connect_button.bind("<Button>", self.get_database_metadata)
         self.view.right_panel.frame_four_t.subFrame4.\
-            buttons_frame.button_normalization.bind("<Button>", self.compute_decomposed_relations)
-        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.button_remove.bind("<Button>",
-                                                                                                       self.remove_fd)
+            buttons_frame.button_normalization.bind("<Button>", self.compute_decomposed_relations3NF)
+        self.view.right_panel.frame_four_t.subFrame4.\
+            buttons_frame.button_bcnf.bind("<Button>", self.compute_decomposed_relationsBCNF)
+
+
+        self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
+            button_remove.bind("<Button>", self.remove_fd)
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
             button_save.bind("<Button>", self.save_relation)
         self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_buttons_1.\
@@ -42,7 +46,6 @@ class Controller():
     def add_fd(self, event):
         inputDialog = MyDialog(self.root)
         self.root.wait_window(inputDialog.top)
-        print(inputDialog)
         if inputDialog.fd is not None:
             self.model.add_fd(inputDialog.fd, self.current_relation)
 
@@ -51,7 +54,6 @@ class Controller():
         if len(fd_idx) != 0:
             fd = self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.selection_get()
             removed = self.model.remove_fd_idx(self.current_relation, fd_idx[0])
-            print(removed)
             self.view.right_panel.frame_two_t.subFrame2.fds_notebook.tab1.fds_table.delete(fd_idx[0])
 
     def save_relation(self, event):
@@ -97,12 +99,19 @@ class Controller():
                 if item_values['values'][1] == 'decomposition':
                     self.view.side_panel.relation_tree.tree.delete(item)
 
-    def compute_decomposed_relations(self, event, nf='BCNF'):
+
+    def compute_decomposed_relations3NF(self, event):
+        self.compute_decomposed_relations(decomp='3NF')
+
+    def compute_decomposed_relationsBCNF(self, event):
+        self.compute_decomposed_relations(decomp='BCNF')
+
+    def compute_decomposed_relations(self, decomp='3NF'):
         self.delete_decomposition()
-        if nf == '3NF':
-            self.model.compute_normalization_proposal_3NF()
+        if decomp == '3NF':
+            self.model.compute_normalization_proposal(decomp='3NF')
         else:
-            self.model.compute_normalization_proposal_BCNF()
+            self.model.compute_normalization_proposal(decomp='BCNF')
         #
         print(self.model.relations)
         relation_names = self.model.get_original_relations_names()
@@ -131,7 +140,6 @@ class Controller():
             self.clear_right_panel()
             self.view.right_panel.frame_one_t.subFrame1.var_name.set(name)
             nf = self.model.get_NF(name)
-            print(nf)
             self.view.right_panel.frame_one_t.subFrame1.var_nf.set(nf)
 
             # Candidate keys:
