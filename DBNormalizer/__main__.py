@@ -1,4 +1,4 @@
-# file run/__main__.py
+__author__ = 'humberto'
 
 from DBNormalizer.controller.Controller import *
 

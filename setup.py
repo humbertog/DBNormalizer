@@ -45,13 +45,13 @@ setup(
     author_email='humberto_gora@gmail.com,gabrielahrlr@gmail.com',
     description='Data base normalizer',
     long_description=long_description,
-    packages=[ ],
+    packages=['DBNormalizer/controller', 'DBNormalizer/model', 'DBNormalizer/view'],
     include_package_data=True,
     platforms='any',
     test_suite='',
     classifiers = [
         'Programming Language :: Python',
-        'Development Status :: 1 - Beta''
+        'Development Status :: 1 - Beta'
         ],
     extras_require={
         'testing': ['pytest'],
