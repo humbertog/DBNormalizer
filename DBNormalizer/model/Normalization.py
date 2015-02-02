@@ -38,7 +38,7 @@ class Normalization:
         prime = False
         for key in candKeys:
             if (key.__contains__(attr)):
-                Prime = True
+                prime = True
                 break
         return not prime
 
