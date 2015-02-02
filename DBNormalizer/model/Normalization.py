@@ -34,13 +34,23 @@ class Normalization:
     #attr is a single Attribute
     #candKeys is set of candidate keys
     #prime is boolean variable
+
     def isNonPrime(self,attr, candKeys):
-        prime = False
-        for key in candKeys:
-            if (key.__contains__(attr)):
-                prime = True
-                break
-        return not prime
+            """ check if attr is a non prime attribute
+               param attr: Attribute of a realtion
+               param candKeys: list of Candidate Keys
+               retutn boolean: True of non Prime else false"""
+
+            prime = False
+            for key in candKeys:
+                if (attr.issubset(key)):
+                    prime = True
+                    print("Prime:",attr)
+                    break
+            noPrime=not prime
+            print(noPrime)
+            return noPrime
+
 
 
     #lhs is set of LHS attributes
@@ -187,17 +197,21 @@ class Normalization:
 
     #iskey(lhs,candKeys) test if lhs is key
     #toAttributeList(rhs) get the all the attributes in right Hand side as a List
+
     def check3NF(self,fd, lhs, rhs, candKeys):
-        violation3NF = False
-        if (self.isKey(lhs, candKeys)):
             violation3NF = False
-        else:
-            for attr in rhs:
-                if (self.isNonPrime(attr, candKeys)):
-                    violation3NF = True
-                    self.FDList3NF.append(fd)
-                    break
-        return violation3NF
+            if (self.isKey(lhs, candKeys)):
+                violation3NF = False
+            else:
+                for attr in rhs:
+                    if (self.isNonPrime(set([attr]), candKeys)):
+                        violation3NF = True
+                        print("3nf",fd)
+                        self.FDList3NF.append(fd)
+                        break
+            return violation3NF
+
+
 
 
     #lhs and rhs are set of LHS and RHS attributes respectively
