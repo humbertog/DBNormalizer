@@ -32,6 +32,24 @@ def get_table_partitions(table, attributes, db):
     return partitions
 
 
+def get_duplicate_colums(table, lhs, rhs, conn):
+    #TODO Not IMPLEMENTED
+    lhs_c = lhs[:]
+    rhs_c = rhs[:]
+    left_attr = lhs_c.pop(0)
+    right_att = rhs_c.pop(0)
+    for i in lhs_c:
+        left_attr = over + "," + i
+
+    for i in rhs_c:
+        right_att = over + "," + i
+
+    query =  "select" + left_attr + ", count(*) from (select distinct " + left_attr + "," + right_att + \
+             "from" + table + "group by" + left_attr + "having count(*) > 1"
+
+    return query
+
+
 def get_attribute_partition(table, attribute, db):
     query = "select " + attribute + "," + " array_agg(index) as e from (select " + attribute + ","  \
             "row_number() over() as index from " + table + ") as fool  group by " + attribute

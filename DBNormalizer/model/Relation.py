@@ -39,6 +39,37 @@ class Relation:
                + "FDS: " + str(self.fds) + "\n" + "CC:" + str(self.canonical_cover) + "\n" + "Cand keys:" + \
                str(self.candidate_keys) + "\n" + "NF: " + str(self.NF)
 
+    def join_rhs_cc(self):
+        new_fds = FDependencyList()
+        old_fds = self.canonical_cover[:]
+        while len(old_fds) > 0:
+            fds_sel = old_fds.pop()
+            i = 0
+            while i < len(old_fds):
+                fd = old_fds[i]
+                if fds_sel.lh == fd.lh:
+                    fds_sel.rh = fds_sel.rh + fd.rh
+                    old_fds.pop(i)
+                i+=1
+            new_fds.append(fds_sel)
+
+        self.canonical_cover = new_fds
+
+    def join_rhs_fds(self):
+        new_fds = FDependencyList()
+        old_fds = self.fds[:]
+        while len(old_fds) > 0:
+            fds_sel = old_fds.pop()
+            i = 0
+            while i < len(old_fds):
+                fd = old_fds[i]
+                if fds_sel.lh == fd.lh:
+                    fds_sel.rh = fds_sel.rh + fd.rh
+                    old_fds.pop(i)
+                i+=1
+            new_fds.append(fds_sel)
+        self.fds = new_fds
+
 
     def get_attributes_type(self, attr_name=None):
         return get_schema_attribute_property(self.db_schema_attributes, att_property='type', attr_name=attr_name)
@@ -66,6 +97,7 @@ class Relation:
     def set_canonical_cover(self):
         if len(self.fds) > 0:
             self.canonical_cover = self.fds.MinimalCover()
+            self.join_rhs_cc()
 
     def set_candidate_keys(self):
         if len(self.canonical_cover) != 0:
@@ -105,7 +137,6 @@ class Relation:
             self.fds.extend(fd)
         if type(fd) is FDependency:
             self.fds.append(fd)
-        print(self)
 
     def fds_remove(self, fd):
         if type(fd) is FDependency:
@@ -123,6 +154,7 @@ class Relation:
                 for lhs in fds_in_rel[rhs]:
                     fds.append(FDependency(lhs, [rhs]))
         self.fds = fds.MinimalCover()
+        self.join_rhs_fds()
         #self.fds = fds
 
     def SQL_statement(self, metadata):
@@ -159,6 +191,7 @@ class Relation:
             new_relation = Relation(name, over_attributes)
         if fds is not None:
             new_relation.fds_add(fds)
+            new_relation.join_rhs_fds()
 
         return new_relation
 

@@ -54,9 +54,14 @@ class Model():
                 new_relation.set_canonical_cover()
                 new_relation.set_candidate_keys()
                 new_relation.set_normalization()
+
+                new_relation.join_rhs_fds()
+                new_relation.join_rhs_cc()
+
                 decomposition_dic[name] = [sub_name]
             else:
                 if decomp == '3NF':
+                    print(canonical_cover)
                     dec_proposal = dec.proposal3NF(set(attr), canonical_cover, (rel.fds))
                 else:
                     dec_proposal = dec.proposalBCNF(set(attr), canonical_cover)
@@ -71,9 +76,13 @@ class Model():
                     new_attr = list(tup[0])
                     new_fds = FDependencyList(tup[1])
                     new_relation = rel.sub_relation(sub_name, new_attr, new_fds)
+
                     new_relation.set_canonical_cover()
                     new_relation.set_candidate_keys()
                     new_relation.set_normalization()
+
+                    new_relation.join_rhs_fds()
+                    new_relation.join_rhs_cc()
 
                     self.relations[sub_name] = new_relation
                     i += 1
@@ -153,12 +162,18 @@ class Model():
             self.relations[nam].set_canonical_cover()
             self.relations[nam].set_candidate_keys()
             self.relations[nam].set_normalization()
+
+            self.relations[nam].join_rhs_fds()
+            self.relations[nam].join_rhs_cc()
             #print(self.relations[nam])
 
     def update_relation(self, relation_name):
         self.relations[relation_name].set_canonical_cover()
         self.relations[relation_name].set_candidate_keys()
         self.relations[relation_name].set_normalization()
+
+        self.relations[relation_name].join_rhs_fds()
+        self.relations[relation_name].join_rhs_cc()
 
     def get_NF(self, relation_name):
         return self.relations[relation_name].NF
