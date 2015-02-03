@@ -14,19 +14,19 @@ class RightPanel(Frame):
 
 
         self.frame_one_t = frame_one(self)
-        self.frame_one_t.grid(column=1,row=2, sticky=(W,E))
+        #self.frame_one_t.grid(column=1,row=2, sticky=(W,E))
         self.frame_one_t.pack(anchor=NW, expand=0, fill=X)
 
         self.frame_two_t = frame_two(self)
-        self.frame_two_t.grid(column=1,row=3, sticky=(W,E))
+        #self.frame_two_t.grid(column=1,row=3, sticky=(W,E))
         self.frame_two_t.pack(anchor=NW, expand=1, fill=BOTH)
 
         self.frame_three_t = frame_three(self)
-        self.frame_three_t.grid(column=1,row=3, sticky=(W,E))
+        #self.frame_three_t.grid(column=1,row=3, sticky=(W,E))
         self.frame_three_t.pack(anchor=NW, expand=0, fill=X)
 
         self.frame_four_t = frame_four(self)
-        self.frame_four_t.grid(column=1,row=3, sticky=(W,E))
+        #self.frame_four_t.grid(column=1,row=3, sticky=(W,E))
         self.frame_four_t.pack(anchor=NW, expand=0, fill=X)
 
 class frame_one(Frame):
