@@ -1,0 +1,24 @@
+The program is divided into 3 modules. The reason for this is the separation of concerns. We followed the model view controller pattern:
+1) Model: Contains all the functions, classes and methods used to perform the decomposition, generating SQL statements, get functional dependencies, read metadata from db, etc.
+2) Controller:  This acts as an interface between the view and the model.
+3) View: This contains GUI code.
+
+
+Before executing the project, please make sure following prerequisites are installed 
+
+1)   Python , Version 3.x 
+2)   PostgreSQL , Version 9.3 or higher
+3)   SQLAlchemy , Version 0.9 
+4)   python-setuptools , Version 12.0.5 (Required for imports used in setup.py)
+5)   Tkinter (python-tk , python-pmw , python-imaging) for Python 3+
+
+
+###############################################################
+TO EXECUTE THE PROGRAM, please run the following command in the directory where setup file is located.
+
+	$ python3 -m DBNormalizer
+
+
+##############################################################
+
+ 
