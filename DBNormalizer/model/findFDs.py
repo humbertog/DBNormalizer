@@ -9,17 +9,17 @@ def find_fds(attributes, db_partition, test_mode=False, pk=[], uk=[]):
     for i in range(0, len_attributes):
         rhs = attr.pop(0)
         lhs_in = attr[:]
-        pk_unique = []
-        if set(pk).issubset(set(lhs_in)):
-            pk_unique.append(pk)
-            lhs_in = list(set(lhs_in) - set(pk))
-        for u in uk:
-            if set(u).issubset(set(lhs_in)):
-                pk_unique.append(u)
-                lhs_in = list(set(lhs_in) - set(u))
+        # pk_unique = []
+        # if set(pk).issubset(set(lhs_in)):
+        #     pk_unique.append(pk)
+        #     lhs_in = list(set(lhs_in) - set(pk))
+        # for u in uk:
+        #     if set(u).issubset(set(lhs_in)):
+        #         pk_unique.append(u)
+        #         lhs_in = list(set(lhs_in) - set(u))
 
         lhs = find_fds_rhs(lhs_in, [rhs], db_partition, test_mode)
-        fds[rhs] = lhs + pk_unique
+        fds[rhs] = lhs # + pk_unique
         attr.append(rhs)
     return fds
 
