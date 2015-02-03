@@ -153,9 +153,9 @@ class Relation:
             if fds_in_rel[rhs]:
                 for lhs in fds_in_rel[rhs]:
                     fds.append(FDependency(lhs, [rhs]))
-        self.fds = fds.MinimalCover()
+        #self.fds = fds.MinimalCover()
+        self.fds = fds
         self.join_rhs_fds()
-        #self.fds = fds
 
     def SQL_statement(self, metadata):
         """
