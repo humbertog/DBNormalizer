@@ -107,10 +107,12 @@ class Relation:
 
     def set_normalization(self):
         if len(self.canonical_cover) != 0:
+            fds_right_singleton = self.canonical_cover.makeRightsingleton()
+
             self.normalization.FDListBCNF = FDependencyList()
             self.normalization.FDList3NF = FDependencyList()
             self.normalization.FDList2NF = FDependencyList()
-            for fd in self.canonical_cover:
+            for fd in fds_right_singleton:
                 lhs=set(fd.lh)
                 rhs=set(fd.rh)
                 self.normalization.check2NF(fd,lhs,rhs, self.candidate_keys)
